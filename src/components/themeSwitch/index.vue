@@ -51,8 +51,6 @@ const handleClick = (e) => {
         )
     })
 }
-
-onMounted(() => {})
 </script>
 
 <style scoped lang='scss'>
