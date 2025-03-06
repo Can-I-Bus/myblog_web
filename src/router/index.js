@@ -1,0 +1,38 @@
+import { createRouter, createWebHashHistory } from 'vue-router';
+
+const router = createRouter({
+    history: createWebHashHistory(import.meta.env.BASE_URL),
+    routes: [
+        {
+            path: '/home',
+            name: 'home',
+            component: () => import('../views/home/index.vue'),
+        },
+        //博客详情
+        {
+            path: '/blog/id',
+            name: 'blogDetail',
+            component: () => import('../views/blogDetail/index.vue'),
+        },
+        //博客列表
+        {
+            path: '/blog',
+            name: 'blog',
+            component: () => import('../views/blogList/index.vue'),
+        },
+        //demo列表
+        {
+            path: '/demo',
+            name: 'demo',
+            component: () => import('../views/demo/index.vue'),
+        },
+        //留言墙
+        {
+            path: '/message',
+            name: 'message',
+            component: () => import('../views/message/index.vue'),
+        },
+    ],
+});
+
+export default router;

@@ -1,0 +1,26 @@
+$breaoptions: (
+    'small': (
+        320px,
+        765px,
+    ),
+    'middle': (
+        766px,
+        1025px,
+    ),
+    'larg': 1025px,
+);
+
+@mixin respond-to($breakname) {
+    $bp: map-get($breaoptions, $breakname);
+    @if type-of($bp == 'list') {
+        $min: nth($bp, 1);
+        $max: nth($bp, 2);
+        @media (min-width: $min) and (max-width: $max) {
+            @content;
+        }
+    } @else {
+        @media (min-width: $bp) {
+            @content;
+        }
+    }
+}

@@ -1,0 +1,35 @@
+html[data-theme='light'] {
+    --textHoverColor: #8364ff;
+    --textMainColor: #000;
+    --textSecColor: #8a8a8e;
+    --mainBgColor: #fff;
+    --secBgColor: #f6f6f7;
+    --thirdBgColor: #202127;
+    --hoverBgColor: #2c2f36;
+    --hoverSecBgColor: #111111;
+    --hoverBorderColor: #2d2d2d;
+    --borderMainColor: #e2e2e2;
+    --borderSecColor: #f6f6f7;
+    --borderThirdColor: #e9e9ed;
+    --borderFourthColor: rgba(101, 117, 133, 0.16);
+    --shadowMain: 0 1px 2px rgba(0, 0, 0), 0 1px 3px rgba(0, 0, 0);
+    --themeBg: #080808;
+}
+
+html[data-theme='dark'] {
+    --textHoverColor: #64ffb1;
+    --textMainColor: #fff;
+    --textSecColor: #dfdfd6;
+    --mainBgColor: #080808;
+    --secBgColor: #0f0f0f;
+    --thirdBgColor: #202127;
+    --hoverBgColor: #2c2f36;
+    --hoverSecBgColor: #111111;
+    --hoverBorderColor: #2d2d2d;
+    --borderMainColor: #e2e2e2;
+    --borderSecColor: #f6f6f7;
+    --borderThirdColor: #e9e9ed;
+    --borderFourthColor: rgba(255, 255, 255, 0.2);
+    --shadowMain: 0 1px 2px rgba(255, 255, 255, 0.8), 0 0 2px rgba(255, 255, 255, 0.5);
+    --themeBg: #fff;
+}
