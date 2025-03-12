@@ -15,6 +15,14 @@
                 <router-link
                     :class="[
                         'nav_item',
+                        { active: route.fullPath === '/about' },
+                    ]"
+                    to="/about"
+                    >关于我</router-link
+                >
+                <router-link
+                    :class="[
+                        'nav_item',
                         { active: route.fullPath === '/blog' },
                     ]"
                     to="/blog"
@@ -63,7 +71,7 @@ const route = useRoute()
 const isScroll = ref(false)
 
 const scroll = () => {
-    if (window.scrollY > 80) {
+    if (window.scrollY > 10) {
         isScroll.value = true
     } else {
         isScroll.value = false
@@ -83,10 +91,16 @@ onBeforeUnmount(() => {
 @use '../../css/mixin.scss' as *;
 $gap: 30px;
 .header_wrap {
-    padding: 16px 32px;
-    @include flexAlianCenter();
+    width: 100vw;
+    position: fixed;
+    top: 0;
+    height: 64px;
+    padding: 0 32px;
     justify-content: space-between;
     transition: 0.3s;
+    z-index: 9;
+
+    @include flexAlianCenter();
     @include respond-to('small') {
         display: none;
     }

@@ -13,3 +13,26 @@
     align-items: center;
     justify-content: center;
 }
+
+@mixin flexStart() {
+    display: flex;
+    align-items: flex-start;
+}
+
+@mixin flexColumn() {
+    display: flex;
+    flex-direction: column;
+}
+
+@mixin bottomLine($width, $bottom) {
+    position: relative;
+    &::after {
+        content: '';
+        position: absolute;
+        bottom: $bottom;
+        left: 0;
+        width: $width;
+        height: 1px;
+        background-color: var(--borderSecColor);
+    }
+}

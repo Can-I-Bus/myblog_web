@@ -1,6 +1,5 @@
+import apis from './apis/index';
+
 export default {
-    getBannerList: {
-        method: 'get',
-        url: '/api/banner',
-    },
+    ...apis,
 };

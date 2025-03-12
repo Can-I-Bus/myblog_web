@@ -1,6 +1,5 @@
 import axios from 'axios';
 import config from '@/config/http.config';
-
 const { baseURL, timeout } = config;
 
 const _axios = axios.create({

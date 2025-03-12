@@ -30,6 +30,11 @@ const icons = ref({
     empty: 'icon-empty', // 空心
     email: 'icon-youxiang', // 邮箱
     heiye: 'icon-heiyemoshi', // 黑夜
+    position: 'icon-weizhi', // 位置
+    topArrow: 'icon-xiangshang2', // 上箭头
+    bottomArrow: 'icon-xiangxia2', //
+    version: 'icon-banben', // 版本
+    code: 'icon-code', // 代码
 })
 </script>
 <style scoped lang='scss'>
