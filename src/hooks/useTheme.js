@@ -20,17 +20,6 @@ export default function useTheme() {
         document.documentElement.setAttribute('data-theme', theme.value);
     };
 
-    const createLink = (url) => {
-        return new Promise((resolve) => {
-            const link = document.createElement('link');
-            link.rel = 'stylesheet';
-            link.href = `${url}?v=${Date.now()}`;
-            link.setAttribute('data-theme', theme.value);
-            link.onload = () => resolve();
-            document.head.appendChild(link);
-        });
-    };
-
     const toogleLink = async () => {
         const cssLinkItem = cssLinkMap.value[theme.value];
 
