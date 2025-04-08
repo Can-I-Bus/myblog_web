@@ -8,3 +8,24 @@ export const deepClone = (obj) => {
     }
     return copy;
 };
+
+export const parseTime = (time) => {
+    let format = 'y-m-d h:i:s';
+    const date = new Date(time);
+    const dateMap = {
+        y: date.getFullYear(),
+        m: date.getMonth() + 1,
+        d: date.getDate(),
+        h: date.getHours(),
+        i: date.getMinutes(),
+        s: date.getSeconds(),
+    };
+    Object.entries(dateMap).forEach(([key, value]) => {
+        if (value < 10) {
+            format = format.replace(key, `0${value}`);
+        } else {
+            format = format.replace(key, value);
+        }
+    });
+    return format;
+};
