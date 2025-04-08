@@ -745,7 +745,9 @@
     color: #1f2328;
     background-color: #f6f8fa;
     border-radius: 6px;
-    overflow-x: auto;
+    /* 新增自定义滚动条样式 */
+    --scrollbar-width: 6px;
+    --scrollbar-radius: 3px;
 }
 
 .markdown-body pre code,
@@ -1104,4 +1106,37 @@
 
 .markdown-body .highlight pre:has(+ .zeroclipboard-container) {
     min-height: 52px;
+}
+
+/* webkit 滚动条 */
+.markdown-body .highlight pre::-webkit-scrollbar,
+.markdown-body pre::-webkit-scrollbar {
+    width: var(--scrollbar-width);
+    height: var(--scrollbar-width);
+    background-color: transparent;
+}
+
+.markdown-body .highlight pre::-webkit-scrollbar-track,
+.markdown-body pre::-webkit-scrollbar-track {
+    background-color: transparent;
+    border-radius: var(--scrollbar-radius);
+}
+
+.markdown-body .highlight pre::-webkit-scrollbar-thumb,
+.markdown-body pre::-webkit-scrollbar-thumb {
+    background-color: #3b4450;
+    border-radius: var(--scrollbar-radius);
+    transition: background-color 0.3s;
+}
+
+.markdown-body .highlight pre::-webkit-scrollbar-thumb:hover,
+.markdown-body pre::-webkit-scrollbar-thumb:hover {
+    background-color: #409eff;
+}
+
+/* firefox 兼容 */
+.markdown-body .highlight pre,
+.markdown-body pre {
+    scrollbar-width: thin;
+    scrollbar-color: #3b4450 transparent;
 }
