@@ -1,0 +1,29 @@
+.toast_wrap {
+    position: absolute;
+    top: 10%;
+    left: 50%;
+    transform: translate(-50%, -50%) translateY(30px);
+    z-index: 2003;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    border-radius: 8px;
+    padding: 18px;
+    color: #fff !important;
+    font-size: 14px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    opacity: 0;
+    transition: all 0.4s ease-in-out;
+    &_info {
+        background-color: #5bc0de;
+    }
+    &_success {
+        background-color: #54a159;
+    }
+    &_error {
+        background-color: #d9534f;
+    }
+    &_warning {
+        background-color: #f0ad4e;
+    }
+}
