@@ -1,22 +1,11 @@
 <template>
     <div class="loadimg_wrap">
-        <img
-            v-if="!loadDown"
-            class="small_img"
-            :src="smalImgComputed"
-            alt="!"
-        />
-        <img
-            class="big_img"
-            :style="{ opacity: loadDown ? 1 : 0 }"
-            :src="bigImgComputed"
-            alt="!"
-            @load="loadImg"
-        />
+        <img v-if="!loadDown" class="small_img" :src="smalImgComputed" alt="!" />
+        <img class="big_img" :style="{ opacity: loadDown ? 1 : 0 }" :src="bigImgComputed" alt="!" @load="loadImg" />
     </div>
 </template>
 <script setup>
-import { ref, onMounted, defineProps, computed, defineEmits } from 'vue'
+import { ref, onMounted, defineProps, computed, defineEmits } from 'vue';
 const props = defineProps({
     smallImg: {
         type: String,
@@ -24,23 +13,23 @@ const props = defineProps({
     bigImg: {
         type: String,
     },
-})
-const emits = defineEmits(['loaded'])
-const loadDown = ref(false)
+});
+const emits = defineEmits(['loaded']);
+const loadDown = ref(false);
 const smalImgComputed = computed(() => {
-    return import.meta.env.VITE_BASE_URL + props.smallImg
-})
+    return props.smallImg;
+});
 const bigImgComputed = computed(() => {
-    return import.meta.env.VITE_BASE_URL + props.bigImg
-})
+    return props.bigImg;
+});
 const loadImg = () => {
     setTimeout(() => {
-        loadDown.value = true
-        emits('loaded')
-    }, 500)
-}
+        loadDown.value = true;
+        emits('loaded');
+    }, 500);
+};
 </script>
-<style scoped lang='scss'>
+<style scoped lang="scss">
 .loadimg_wrap {
     position: relative;
     width: 100%;
