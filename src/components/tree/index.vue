@@ -1,16 +1,15 @@
 <!-- 
     组件接收key值，每层级的key值都是唯一的，通过key值来控制展开和收起
 -->
-
 <template>
     <div class="tree_wrap">
-        <TreeNode v-for="(item, idx) in treeData" :key="idx" :node="item" :titleKey="titleKey" :recKey="recKey" :childrenKey="childrenKey" />
+        <TreeNode v-for="(item, idx) in treeData" :key="idx" :node="item" :titleKey="titleKey" :recKey="recKey" :childrenKey="childrenKey" @handleClick="nodeClick" @handleLoadMore="nodeLoadMore" />
     </div>
 </template>
 <script setup>
 import TreeNode from './TreeNode.vue';
 import { provide, defineProps, defineEmits } from 'vue';
-const emits = defineEmits(['update:modelValue']);
+const emits = defineEmits(['update:modelValue', 'handleClick']);
 const props = defineProps({
     treeData: {
         type: Array,
@@ -37,6 +36,14 @@ const props = defineProps({
     },
 });
 
+const nodeClick = (node) => {
+    emits('handleClick', node);
+};
+
+const nodeLoadMore = (node) => {
+    emits('handleLoadMore', node);
+};
+
 const toogleExpand = (name) => {
     if (props.modelValue.includes(name)) {
         const newNodeNames = props.modelValue.filter((item) => item !== name);
@@ -51,6 +58,6 @@ provide('toogleExpand', toogleExpand);
 </script>
 <style scoped lang="scss">
 .tree_wrap {
-    width: 108%;
+    width: 100%;
 }
 </style>

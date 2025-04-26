@@ -5,13 +5,12 @@
                 <p>{{ node?.[titleKey] }}</p>
                 <Icon v-if="node?.[childrenKey]?.length" type="topArrow" :style="{ transition: '.2s', transform: isExpand ? 'rotate(180deg)' : 'rotate(90deg)', marginLeft: '10px' }" />
             </div>
-            <CollapseTransition>
-                <div class="tree_node_content" v-show="isExpand">
-                    <div v-for="(item, idx) in node?.[childrenKey]" :key="idx" class="tree_node_content_item" @click="toogleExpand(item.key)">
-                        {{ item.title }}
-                    </div>
+
+            <div class="tree_node_content" v-show="isExpand && hasNodeContent">
+                <div v-for="(item, idx) in node?.[childrenKey]" :key="idx" class="tree_node_content_item" @click="handleClick(item)">
+                    {{ item.title }}
                 </div>
-            </CollapseTransition>
+            </div>
 
             <div class="tree_children" v-show="isExpand">
                 <CollapseTransition>
@@ -24,7 +23,8 @@
 <script setup name="TreeNode">
 import CollapseTransition from '../collapse/CollapseTransition.vue';
 import Icon from '@/components/icon/index.vue';
-import { defineProps, inject, computed, ref, onMounted } from 'vue';
+import { inject, computed, ref, onMounted } from 'vue';
+const emits = defineEmits(['handleClick']);
 const activeNames = inject('activeNames');
 const toogleExpand = inject('toogleExpand');
 const props = defineProps({
@@ -44,6 +44,10 @@ const props = defineProps({
 });
 
 const expand = ref(false);
+
+const hasNodeContent = computed(() => {
+    return props.node?.childrenKey?.length && props.node?.childrenKey?.length > 0;
+});
 
 const isChildrenActive = computed(() => {
     return props.node[props.childrenKey]?.some((item) => {
@@ -72,6 +76,11 @@ const isChildInActive = (arr) => {
             return false;
         }
     }
+};
+
+const handleClick = (item) => {
+    toogleExpand(item.key);
+    emits('handleClick', item);
 };
 
 const handleTitleClick = () => {
