@@ -16,16 +16,16 @@ const createLoadingInstance = (el, binding) => {
     const container = document.createElement('div');
     container.className = 'loading-container';
     container.style.cssText = `
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: ${width}px;
-    height: ${height * 0.6}px;
-    background-color: ${theme === 'light' ? 'rgba(255,255,255,0.9)' : 'rgba(0,0,0,0.9)'};
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 2002;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: ${width}px;
+        height: ${height * 0.6}px;
+        background-color: ${theme === 'light' ? 'rgba(255,255,255,0.9)' : 'rgba(0,0,0,0.9)'};
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 2002;
   `;
 
     const app = createApp(Loading);
@@ -55,8 +55,9 @@ const createLoadingInstance = (el, binding) => {
 
 const destroyLoadingInstance = (el) => {
     if (!elementMap.has(el)) return;
-    const { instance, observer, app } = elementMap.get(el);
+    const { instance, container, observer, app } = elementMap.get(el);
     observer.disconnect();
+    container.remove();
     instance.$el.remove();
     app.unmount();
     elementMap.delete(el);
