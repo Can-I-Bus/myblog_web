@@ -1,6 +1,6 @@
 <template>
-    <div class="blog_detail_wrap">
-        <BlogCategoryNav v-loading="true" />
+    <div class="blog_detail_wrap" v-loading="loadng">
+        <ArticleList :articleList="articleList" :currArticle="currArticle" :currCategoryInfo="currCategoryInfo" @handleClick="handleArticleClick" />
         <div class="blog_detail_content">
             <h2 class="blog_detail_title">{{ currArticle?.title }}</h2>
 
@@ -24,56 +24,79 @@
                 </div>
             </div>
             <div class="blog_detail_nav" v-if="hasPrev || hasNext">
-                <div class="prev" v-if="hasPrev">
+                <div class="prev" :style="{ opacity: hasPrev ? 1 : 0 }" @click="handleArticleClick(prev)">
                     <span>上一篇</span>
                     <p>{{ prev?.title }}</p>
                 </div>
-                <div class="next" v-if="hasNext">
-                    <span>上一篇</span>
+                <div class="next" :style="{ opacity: hasNext ? 1 : 0 }" @click="handleArticleClick(next)">
+                    <span>下一篇</span>
                     <p>{{ next?.title }}</p>
                 </div>
             </div>
-            <Comment />
+            <Comment style="margin-bottom: 50px" :articleId="currArticleid" @updateComment="getCommentList" />
             <div class="blog_detail_comment_list">
-                <span>32条评论</span>
-                <CommentItem v-for="item in 10" :key="item" />
-                <Pager :total="100" :currentPage="commentListPage" @pageChange="handlePageChange" />
+                <div>
+                    <p style="margin-bottom: 20px">{{ commentTotal }}条评论</p>
+                    <div>
+                        <div v-if="commentList.length > 0" class="comment_list">
+                            <CommentItem v-for="item in commentList" :key="item.id" :comment="item" />
+                        </div>
+                        <Empty v-else fontSize="40px" />
+                    </div>
+                </div>
+                <Pager :total="commentTotal" :currentPage="commentListPage" @pageChange="handlePageChange" />
             </div>
-
-            <!-- <div style="background-color: #fff; height: 200px; width: 100px"></div> -->
         </div>
-        <BlogNav :toc="currArticle?.toc" :active-id="activeHeadingId" @handleClick="handleNavClick" />
+        <BlogNav :toc="currArticle?.toc" :isRoot="true" :active-id="activeHeadingId" @handleClick="handleNavClick" />
     </div>
 </template>
 
 <script setup>
+import ArticleList from './components/ArticleList.vue';
 import Pager from '@/components/pager/index.vue';
-import BlogCategoryNav from './components/BlogCategoryNav.vue';
 import BlogNav from './components/BlogNav.vue';
 import CommentItem from './components/CommentItem.vue';
 import Comment from './components/Comment.vue';
+import Empty from '@/components/empty/index.vue';
+import hljs from 'highlight.js';
 import { ref, getCurrentInstance, onMounted, computed, nextTick, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { parseTime } from '@/utils';
-import hljs from 'highlight.js';
 
 const { $api } = getCurrentInstance().proxy;
 const route = useRoute();
 const activeHeadingId = ref('');
+const loadng = ref(false);
 const articleContent = ref(null);
+const articleObserver = ref(null); // 文章观察者
 const commentListPage = ref(1);
 const page = ref(1);
 const limit = ref(50);
 const total = ref(0);
+const commentQuery = ref({
+    page: 1,
+    limit: 50,
+});
+const commentTotal = ref(0);
+const commentList = ref([]);
 const articleList = ref([]);
 const currArticleid = ref('');
 
+const currCategoryInfo = computed(() => {
+    return {
+        name: route.query.name,
+        icon: route.query.icon,
+    };
+});
+
 const prev = computed(() => {
-    return articleList.value.find((item) => item.id === currArticleid.value - 1);
+    const index = articleList.value.findIndex((item) => item.id === currArticleid.value);
+    return articleList.value[index - 1];
 });
 
 const next = computed(() => {
-    return articleList.value.find((item) => item.id === currArticleid.value + 1);
+    const index = articleList.value.findIndex((item) => item.id === currArticleid.value);
+    return articleList.value[index + 1];
 });
 
 const hasPrev = computed(() => {
@@ -84,10 +107,9 @@ const hasNext = computed(() => {
 });
 
 const currArticle = computed(() => {
-    return articleList.value.find((item) => item.id === currArticleid.value);
+    return articleList.value.find((item) => item.id == currArticleid.value);
 });
 
-// 处理导航点击
 const handleNavClick = (id) => {
     activeHeadingId.value = id;
     const el = document.getElementById(id);
@@ -96,12 +118,29 @@ const handleNavClick = (id) => {
             behavior: 'smooth',
             block: 'start',
         });
-        // 更新URL hash（无刷新）
         history.replaceState(null, null, `#${id}`);
     }
 };
 
-// 滚动检测逻辑
+// 检测是否浏览完文章
+const setupArticleObserver = () => {
+    const observer = new IntersectionObserver(
+        (entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    addScanNumber();
+                    observer.disconnect(); // 触发后立即断开
+                }
+            });
+        },
+        { threshold: 1 }
+    );
+    const blogInfo = document.querySelector('.blog_detail_info');
+    blogInfo && observer.observe(blogInfo);
+    return observer;
+};
+
+// 滚动检测
 const setupScrollObserver = () => {
     const observer = new IntersectionObserver(
         (entries) => {
@@ -122,6 +161,18 @@ const setupScrollObserver = () => {
     headings?.forEach((h) => observer.observe(h));
 
     return observer;
+};
+
+const addScanNumber = async () => {
+    const res = await $api({ type: 'addScanNumber', data: { id: currArticleid.value } });
+    if (res.code === 0) {
+        articleList.value = articleList.value.map((item) => {
+            if (item.id === currArticleid.value) {
+                item.scan_number += 1;
+            }
+            return item;
+        });
+    }
 };
 
 const getArticle = async () => {
@@ -145,9 +196,30 @@ const getArticle = async () => {
     }
 };
 
+const getCommentList = async () => {
+    const data = {
+        article_id: currArticleid.value,
+        page: commentQuery.value.page,
+        limit: commentQuery.value.limit,
+    };
+    const res = await $api({ type: 'getCommentList', data });
+    if (res.code === 0) {
+        commentList.value = res.data.rows;
+        commentTotal.value = res.data.count;
+    }
+};
+
 const handlePageChange = (page) => {
     commentListPage.value = page;
-    // getArticle();
+    getCommentList();
+};
+
+const handleArticleClick = (item) => {
+    if (item.id === currArticleid.value) return;
+    currArticleid.value = item.id;
+    setTimeout(() => {
+        document.querySelector('.blog_detail_content').scrollTo(0, 0);
+    }, 0);
 };
 
 const applyHighlight = () => {
@@ -156,23 +228,39 @@ const applyHighlight = () => {
     });
 };
 
-watch(currArticle, async () => {
-    await nextTick();
-    applyHighlight();
-    const observer = setupScrollObserver();
-    return () => observer?.disconnect();
-});
-
-onMounted(() => {
+const init = async () => {
+    loadng.value = true;
     //清除hash
     window.location.hash = '';
     // 获取文章列表
-    getArticle();
+    await getArticle();
+    await getCommentList();
     // 监听hash变化（浏览器前进/后退）
     window.addEventListener('hashchange', () => {
         const hash = window.location.hash.slice(1);
         if (hash) handleNavClick(hash);
     });
+    if (route.query.article_id) {
+        currArticleid.value = route.query.article_id;
+    }
+    loadng.value = false;
+};
+
+watch(currArticle, async () => {
+    await nextTick();
+    applyHighlight();
+    const observer = setupScrollObserver();
+    // 销毁旧观察者
+    if (articleObserver.value) {
+        articleObserver.value.disconnect();
+    }
+    // 创建新观察者
+    articleObserver.value = setupArticleObserver();
+    return () => observer?.disconnect();
+});
+
+onMounted(() => {
+    init();
 });
 </script>
 
@@ -198,6 +286,7 @@ $padding: 50px;
 }
 
 .markdown-body {
+    min-height: 80vh;
     box-sizing: border-box;
     min-width: 200px;
     max-width: 100%;
@@ -266,7 +355,22 @@ $padding: 50px;
     }
 }
 .blog_detail_comment_list {
+    display: flex;
+    flex-direction: column;
+    // align-items: center;
+    justify-content: space-between;
+
     margin-top: 30px;
+    .comment_list {
+        height: calc(500px - 36px);
+        overflow: auto;
+    }
+    > div:nth-of-type(1) {
+        min-height: 500px;
+        > div:nth-of-type(1) {
+            height: calc(500px - 36px);
+        }
+    }
     > span {
         display: inline-block;
         color: var(--textMainColor);
