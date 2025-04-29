@@ -20,7 +20,7 @@ const createLoadingInstance = (el, binding) => {
         top: 0;
         left: 0;
         width: ${width}px;
-        height: ${height * 0.6}px;
+        height: 100%;
         background-color: ${theme === 'light' ? 'rgba(255,255,255,0.9)' : 'rgba(0,0,0,0.9)'};
         display: flex;
         justify-content: center;
