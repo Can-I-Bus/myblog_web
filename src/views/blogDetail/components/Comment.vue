@@ -13,17 +13,22 @@
                     <label class="floating_label">你的昵称</label>
                 </div>
                 <div class="input_group">
-                    <Input v-model="comment" type="textarea" placeholder="其输入你的评论" class="comment_input" :rows="4" />
+                    <Input v-model="comment" type="textarea" placeholder="其输入你的评论" class="comment_input" :rows="4" @change="commentInputChange" />
                     <label class="floating_label">说几句吧</label>
                     <div class="character_count">{{ comment.length }}/500</div>
                 </div>
             </div>
             <div class="comment_footer">
-                <button class="submit_btn" @click="handleClick">
-                    <span>发布评论</span>
-                    <svg class="send_icon" viewBox="0 0 24 24">
-                        <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
-                    </svg>
+                <button class="submit_btn" @click="handleClick" :disabled="loading">
+                    <template v-if="!loading">
+                        <span>发布评论</span>
+                        <svg class="send_icon" viewBox="0 0 24 24">
+                            <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
+                        </svg>
+                    </template>
+                    <template v-else>
+                        <span>发布中...</span>
+                    </template>
                 </button>
             </div>
         </div>
@@ -34,12 +39,39 @@
 import Input from '@/components/input/index.vue';
 import toast from '@/utils/toast/index';
 import { ref, getCurrentInstance } from 'vue';
+const props = defineProps({
+    articleId: {
+        type: Number,
+        required: true,
+    },
+});
+
 const emits = defineEmits(['updateComment']);
 const { $api } = getCurrentInstance().proxy;
+const loading = ref(false);
 const comment = ref('');
 const name = ref('');
 
+const commentInputChange = (val) => {
+    if (val.length > 500) {
+        toast({
+            type: 'warning',
+            message: '评论内容不能超过500个字符',
+            duration: 2000,
+        });
+        comment.value = val.slice(0, 500);
+    }
+};
+
 const handleClick = async () => {
+    if (comment.value.length > 500) {
+        toast({
+            type: 'warning',
+            message: '评论内容不能超过500个字符',
+            duration: 2000,
+        });
+        return;
+    }
     if (!comment.value || !name.value) {
         toast({
             type: 'warning',
@@ -48,22 +80,27 @@ const handleClick = async () => {
         });
         return;
     }
-    const data = {
-        content: comment.value,
-        nickname: name.value,
-    };
-    const res = await $api({ type: 'addComment', data });
-    if (res.code === 0) {
-        emits('updateComment');
+    try {
+        loading.value = true;
+        const data = {
+            article_id: props.articleId,
+            content: comment.value,
+            nickname: name.value,
+        };
+        const res = await $api({ type: 'postComment', data });
+        if (res.code === 0) {
+            toast({
+                type: 'success',
+                message: '评论成功',
+                duration: 2000,
+                cb: () => {
+                    emits('updateComment');
+                },
+            });
+        }
+    } finally {
+        loading.value = false;
     }
-    toast({
-        type: 'success',
-        message: '评论成功',
-        duration: 2000,
-        cb: () => {
-            console.log(111);
-        },
-    });
 };
 </script>
 
@@ -221,5 +258,19 @@ const handleClick = async () => {
     height: 18px;
     fill: currentColor;
     transition: transform 0.2s ease;
+}
+
+/* 修改按钮禁用状态 */
+.submit_btn {
+    &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        background: var(--textHoverColor);
+
+        &:hover {
+            // background: var(--disabledBgColor);
+            transform: none;
+        }
+    }
 }
 </style>

@@ -5,10 +5,10 @@
         </div>
         <div class="comment_container">
             <div class="comment_header">
-                <span class="comment_title">{{ 'formatAuthor(comment.author)' }} 评论于 {{ 'formatDate(comment.date)' }}</span>
+                <span class="comment_title">{{ formatAuthor(comment.nickname) }} 评论于 {{ formatDate(comment.created_at) }}</span>
             </div>
             <div class="comment_content">
-                {{ 'comment.content' }}
+                {{ comment?.content ?? '' }}
             </div>
         </div>
     </div>
@@ -20,15 +20,12 @@ import { defineProps } from 'vue';
 const props = defineProps({
     comment: {
         type: Object,
-        // required: true,
-        validator: (value) => {
-            return typeof value.author === 'string' && value.date instanceof Date && typeof value.content === 'string';
-        },
+        required: true,
     },
 });
 
 const formatDate = (date) => {
-    return date.toLocaleDateString('zh-CN', {
+    return new Date(date).toLocaleDateString('zh-CN', {
         year: 'numeric',
         month: '2-digit',
         day: '2-digit',
