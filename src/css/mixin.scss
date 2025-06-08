@@ -34,5 +34,51 @@
         width: $width;
         height: 1px;
         background-color: var(--borderSecColor);
+        opacity: 0.4;
     }
+}
+
+@mixin leftLine($height, $left, $bottom, $bgColor: var(--borderSecColor), $opacity: 1) {
+    position: relative;
+    &::after {
+        content: '';
+        position: absolute;
+        bottom: $bottom;
+        left: 0;
+        width: 1px;
+        height: $height;
+        background-color: $bgColor;
+        opacity: $opacity;
+    }
+}
+
+@mixin scrollbar($width: 6px) {
+    &::-webkit-scrollbar {
+        width: $width;
+        height: $width;
+        background-color: transparent;
+
+        &-track {
+            background-color: transparent;
+            border-radius: $width/2;
+        }
+
+        &-thumb {
+            background-color: var(--border-color);
+            border-radius: $width/2;
+            transition: background-color 0.3s;
+
+            &:hover {
+                background-color: var(--primary-color);
+            }
+        }
+
+        &-corner {
+            background-color: transparent;
+        }
+    }
+
+    // Firefox 兼容处理（仅支持 thin/auto/none）
+    scrollbar-width: #{if($width > 6, auto, thin)};
+    scrollbar-color: var(--border-color) transparent;
 }

@@ -1,18 +1,22 @@
 $breaoptions: (
     'small': (
-        320px,
-        765px,
+        0px,
+        767px,
     ),
     'middle': (
-        766px,
-        1025px,
+        768px,
+        1023px,
     ),
-    'larg': 1025px,
+    'large': (
+        1024px,
+        1439px,
+    ),
+    'xlarge': 1440px,
 );
 
 @mixin respond-to($breakname) {
     $bp: map-get($breaoptions, $breakname);
-    @if type-of($bp == 'list') {
+    @if type-of($bp) == 'list' {
         $min: nth($bp, 1);
         $max: nth($bp, 2);
         @media (min-width: $min) and (max-width: $max) {
@@ -22,5 +26,53 @@ $breaoptions: (
         @media (min-width: $bp) {
             @content;
         }
+    }
+}
+
+// 移动端优先的媒体查询
+@mixin mobile-first($breakname) {
+    $bp: map-get($breaoptions, $breakname);
+    @if type-of($bp) == 'list' {
+        $min: nth($bp, 1);
+        @media (min-width: $min) {
+            @content;
+        }
+    } @else {
+        @media (min-width: $bp) {
+            @content;
+        }
+    }
+}
+
+// 响应式容器
+@mixin container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+
+    @include respond-to('small') {
+        padding: 0 15px;
+    }
+}
+
+// 弹性布局
+@mixin flex($direction: row, $justify: flex-start, $align: stretch, $wrap: nowrap) {
+    display: flex;
+    flex-direction: $direction;
+    justify-content: $justify;
+    align-items: $align;
+    flex-wrap: $wrap;
+}
+
+// 网格布局
+@mixin grid($columns: 1, $gap: 20px) {
+    display: grid;
+    grid-template-columns: repeat($columns, 1fr);
+    gap: $gap;
+
+    @include respond-to('small') {
+        grid-template-columns: 1fr;
+        gap: 15px;
     }
 }
