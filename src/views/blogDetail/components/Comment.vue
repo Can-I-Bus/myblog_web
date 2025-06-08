@@ -1,25 +1,26 @@
 <template>
     <div class="comment_wrap">
         <div class="comment_avatar">
-            <img src="../../../../public/comment_avatar.png" />
+            <img src="../../../../public/comment_avatar.png" alt="评论头像" />
         </div>
-        <div class="comment_container">
-            <div class="comment_header">
-                <span class="comment_title">发表评论</span>
+        <div class="comment_form">
+            <div class="form_header">
+                <h3>发表评论</h3>
             </div>
-            <div class="comment_body">
-                <div class="input_group">
-                    <Input v-model="name" type="text" placeholder="请输入你的昵称" class="nickname_input" />
-                    <label class="floating_label">你的昵称</label>
-                </div>
-                <div class="input_group">
-                    <Input v-model="comment" type="textarea" placeholder="其输入你的评论" class="comment_input" :rows="4" @change="commentInputChange" />
-                    <label class="floating_label">说几句吧</label>
-                    <div class="character_count">{{ comment.length }}/500</div>
-                </div>
+
+            <div class="input_group">
+                <input v-model="name" type="text" placeholder="请输入你的昵称" class="form_input" required />
+                <label class="input_label">昵称</label>
             </div>
-            <div class="comment_footer">
-                <button class="submit_btn" @click="handleClick" :disabled="loading">
+
+            <div class="input_group">
+                <textarea v-model="comment" placeholder="说几句吧..." class="form_textarea" rows="4" @input="commentInputChange" required></textarea>
+                <label class="input_label">评论内容</label>
+                <div class="character_count">{{ comment.length }}/500</div>
+            </div>
+
+            <div class="form_footer">
+                <button class="submit_btn" @click="handleClick" :disabled="loading || !canSubmit">
                     <template v-if="!loading">
                         <span>发布评论</span>
                         <svg class="send_icon" viewBox="0 0 24 24">
@@ -36,9 +37,9 @@
 </template>
 
 <script setup>
-import Input from '@/components/input/index.vue';
 import toast from '@/utils/toast/index';
-import { ref, getCurrentInstance } from 'vue';
+import { ref, getCurrentInstance, computed } from 'vue';
+
 const props = defineProps({
     articleId: {
         type: Number,
@@ -52,7 +53,12 @@ const loading = ref(false);
 const comment = ref('');
 const name = ref('');
 
-const commentInputChange = (val) => {
+const canSubmit = computed(() => {
+    return comment.value.trim() && name.value.trim() && comment.value.length <= 500;
+});
+
+const commentInputChange = (event) => {
+    const val = event.target.value;
     if (val.length > 500) {
         toast({
             type: 'warning',
@@ -64,34 +70,29 @@ const commentInputChange = (val) => {
 };
 
 const handleClick = async () => {
-    if (comment.value.length > 500) {
+    if (!canSubmit.value) {
         toast({
             type: 'warning',
-            message: '评论内容不能超过500个字符',
+            message: '请输入昵称和评论内容',
             duration: 2000,
         });
         return;
     }
-    if (!comment.value || !name.value) {
-        toast({
-            type: 'warning',
-            message: '请输入评论内容或昵称',
-            duration: 2000,
-        });
-        return;
-    }
+
     try {
         loading.value = true;
         const data = {
             article_id: props.articleId,
-            content: comment.value,
-            nickname: name.value,
+            content: comment.value.trim(),
+            nickname: name.value.trim(),
         };
         const res = await $api({ type: 'postComment', data });
         if (res.code === 0) {
+            comment.value = '';
+            name.value = '';
             toast({
                 type: 'success',
-                message: '评论成功',
+                message: '评论发布成功',
                 duration: 2000,
                 cb: () => {
                     emits('updateComment');
@@ -109,168 +110,211 @@ const handleClick = async () => {
 @use '@/css/mixin.scss' as *;
 
 .comment_wrap {
-    width: 100%;
-    max-width: 900px;
-    margin: 0 auto;
     display: flex;
-    gap: 26px;
-    padding: 0;
+    gap: 16px;
+    margin-bottom: 30px;
+    width: 100%;
+    box-sizing: border-box;
+
+    @include respond-to('small') {
+        flex-direction: column;
+        gap: 12px;
+    }
 }
 
 .comment_avatar {
     flex-shrink: 0;
     width: 48px;
     height: 48px;
-    background-color: #fff;
     border-radius: 50%;
-    img {
-        height: 100%;
-        width: 100%;
-    }
-}
-
-.comment_container {
-    flex: 1;
-    background: var(--mainBgColor);
-    border-radius: 12px;
     overflow: hidden;
-    border: 1px solid var(--borderMainColor);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    transition: all 0.3s ease;
 
-    &:hover {
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    @include respond-to('small') {
+        width: 40px;
+        height: 40px;
+        align-self: flex-start;
+    }
+
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
     }
 }
 
-.comment_header {
-    padding: 16px 20px;
-    border-bottom: 1px solid var(--borderMainColor);
-    background: var(--secBgColor);
-}
+.comment_form {
+    flex: 1;
+    min-width: 0;
 
-.comment_title {
-    font-size: 16px;
-    font-weight: 600;
-    color: var(--textMainColor);
-}
+    .form_header {
+        margin-bottom: 20px;
 
-.comment_body {
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
+        h3 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--textMainColor);
+
+            @include respond-to('small') {
+                font-size: 16px;
+            }
+        }
+    }
 }
 
 .input_group {
     position: relative;
-}
-
-.floating_label {
-    position: absolute;
-    left: 12px;
-    top: 16px;
-    color: var(--textSecColor);
-    font-size: 15px;
-    pointer-events: none;
-    transition: all 0.2s ease;
-    background: var(--mainBgColor);
-    padding: 0 4px;
-}
-
-.nickname_input,
-.comment_input {
+    margin-bottom: 20px;
     width: 100%;
-    padding: 4px 12px;
+    box-sizing: border-box;
+
+    .input_label {
+        position: absolute;
+        left: 12px;
+        top: -8px;
+        font-size: 12px;
+        color: var(--textSecColor);
+        background: var(--mainBgColor);
+        padding: 0 4px;
+        pointer-events: none;
+        transition: all 0.2s ease;
+        z-index: 1;
+    }
+}
+
+.form_input,
+.form_textarea {
+    width: 100%;
+    max-width: 100%;
+    padding: 12px 16px;
+    border: 1px solid var(--borderMainColor);
+    border-radius: 8px;
     background: var(--mainBgColor);
     color: var(--textMainColor);
-    font-size: 15px;
+    font-size: 14px;
+    font-family: inherit;
     transition: all 0.3s ease;
+    outline: none;
+    box-sizing: border-box;
+
+    @include respond-to('small') {
+        padding: 10px 14px;
+        font-size: 14px;
+    }
+
+    &::placeholder {
+        color: var(--textSecColor);
+        opacity: 0.6;
+    }
 
     &:focus {
         border-color: var(--textHoverColor);
-        outline: none;
-        box-shadow: 0 0 0 2px rgba(var(--textHoverColor), 0.1);
+        box-shadow: 0 0 0 3px rgba(var(--textHoverColorRGB), 0.1);
 
-        + .floating_label {
-            top: -8px;
-            font-size: 12px;
+        ~ .input_label {
             color: var(--textHoverColor);
         }
     }
 
-    &:not(:placeholder-shown) + .floating_label {
-        top: -8px;
-        font-size: 12px;
+    &:hover {
+        border-color: var(--textHoverSecColor);
     }
 }
 
-.comment_input {
-    min-height: 120px;
+.form_textarea {
+    min-height: 100px;
+    max-height: 300px;
     resize: vertical;
-    line-height: 1.6;
+    line-height: 1.5;
+
+    @include respond-to('small') {
+        min-height: 80px;
+        max-height: 200px;
+    }
 }
 
 .character_count {
-    text-align: right;
-    font-size: 12px;
+    position: absolute;
+    bottom: -18px;
+    right: 0;
+    font-size: 11px;
     color: var(--textSecColor);
-    margin-top: 4px;
+
+    @include respond-to('small') {
+        bottom: -16px;
+        font-size: 10px;
+    }
 }
 
-.comment_footer {
-    padding: 16px 20px;
-    border-top: 1px solid var(--borderMainColor);
-    background: var(--secBgColor);
+.form_footer {
     display: flex;
     justify-content: flex-end;
+    margin-top: 24px;
+
+    @include respond-to('small') {
+        margin-top: 20px;
+    }
 }
 
 .submit_btn {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    padding: 10px 20px;
-    background: var(--textHoverSecColor);
-    color: #fff;
+    padding: 12px 24px;
+    background: var(--textHoverColor);
+    color: white;
     border: none;
-    border-radius: 6px;
+    border-radius: 8px;
     font-weight: 500;
+    font-size: 14px;
     cursor: pointer;
     transition: all 0.3s ease;
 
-    &:hover {
-        background: var(--hoverBgColor);
+    @include respond-to('small') {
+        padding: 10px 20px;
+        font-size: 13px;
+        border-radius: 6px;
+    }
+
+    &:hover:not(:disabled) {
+        background: var(--textHoverSecColor);
         transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 
         .send_icon {
             transform: translateX(2px);
         }
     }
 
-    &:active {
+    &:active:not(:disabled) {
         transform: translateY(0);
+    }
+
+    &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        background: var(--textSecColor);
+
+        &:hover {
+            transform: none;
+            box-shadow: none;
+
+            .send_icon {
+                transform: none;
+            }
+        }
     }
 }
 
 .send_icon {
-    width: 18px;
-    height: 18px;
+    width: 16px;
+    height: 16px;
     fill: currentColor;
     transition: transform 0.2s ease;
-}
 
-/* 修改按钮禁用状态 */
-.submit_btn {
-    &:disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
-        background: var(--textHoverColor);
-
-        &:hover {
-            // background: var(--disabledBgColor);
-            transform: none;
-        }
+    @include respond-to('small') {
+        width: 14px;
+        height: 14px;
     }
 }
 </style>

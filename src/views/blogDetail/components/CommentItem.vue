@@ -42,21 +42,29 @@ const formatAuthor = (author) => {
 @use '@/css/mixin.scss' as *;
 
 .comment_wrap {
-    width: 100%;
-    max-width: 900px;
-    margin: 0 auto 24px;
     display: flex;
-    gap: 20px;
-    padding: 0;
+    gap: 16px;
+    width: 100%;
+    box-sizing: border-box;
+
+    @include respond-to('small') {
+        flex-direction: column;
+        gap: 12px;
+    }
 }
 
 .comment_avatar {
     flex-shrink: 0;
-    width: 48px;
-    height: 48px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     overflow: hidden;
-    background: #f0f2f5;
+
+    @include respond-to('small') {
+        width: 36px;
+        height: 36px;
+        align-self: flex-start;
+    }
 
     img {
         width: 100%;
@@ -67,42 +75,52 @@ const formatAuthor = (author) => {
 
 .comment_container {
     flex: 1;
-    background: var(--mainBgColor);
-    border-radius: 12px;
-    border: 1px solid var(--borderMainColor);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    min-width: 0;
 }
 
 .comment_header {
-    padding: 16px 20px;
-    border-bottom: 1px solid var(--borderMainColor);
-    background: var(--secBgColor);
+    margin-bottom: 12px;
+
+    @include respond-to('small') {
+        margin-bottom: 10px;
+    }
 }
 
 .comment_title {
-    font-size: 14px;
+    font-size: 13px;
     color: var(--textSecColor);
     font-weight: 500;
+    word-break: break-word;
 
     &::before {
-        content: '🗨';
-        margin-right: 8px;
-        opacity: 0.6;
+        content: '💬';
+        margin-right: 6px;
+        opacity: 0.7;
+    }
+
+    @include respond-to('small') {
+        font-size: 12px;
     }
 }
 
 .comment_content {
-    padding: 20px;
-    font-size: 15px;
-    line-height: 1.7;
+    font-size: 14px;
+    line-height: 1.6;
     color: var(--textMainColor);
     white-space: pre-line;
     word-break: break-word;
+    overflow-wrap: break-word;
+
+    @include respond-to('small') {
+        font-size: 13px;
+        line-height: 1.5;
+    }
 
     &:empty::before {
         content: '此评论暂无内容';
         color: var(--textSecColor);
         font-style: italic;
+        opacity: 0.7;
     }
 }
 </style>

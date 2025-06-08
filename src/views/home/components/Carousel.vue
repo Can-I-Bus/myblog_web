@@ -2,31 +2,14 @@
     <div class="carousel_container">
         <Avatar size="8vw" class="avatar" />
 
-        <Icon
-            @click="handleClick(currIdx - 1)"
-            :style="{ opacity: currIdx === 1 ? '0' : '1' }"
-            type="topArrow"
-            class="arrow top"
-            fontSize="40px"
-        />
+        <Icon @click="handleClick(currIdx - 1)" :style="{ opacity: currIdx === 1 ? '0' : '1' }" type="topArrow" class="arrow top" fontSize="40px" />
 
         <ul class="pointer_wrap">
-            <li
-                v-for="(item, idx) in props.carouselList"
-                :class="['pointer_item', currIdx === idx + 1 ? 'active' : '']"
-                :key="item.id"
-                @click="currIdx = idx + 1"
-            ></li>
+            <li v-for="(item, idx) in props.carouselList" :class="['pointer_item', currIdx === idx + 1 ? 'active' : '']" :key="item.id" @click="currIdx = idx + 1"></li>
         </ul>
 
         <div class="carousel_wrap" :style="{ transform: translateY }">
-            <CarouselItem
-                v-for="(item, index) in props.carouselList"
-                :idx="index + 1"
-                :currIdx="currIdx"
-                :key="index"
-                :carouselItem="item"
-            ></CarouselItem>
+            <CarouselItem v-for="(item, index) in props.carouselList" :idx="index + 1" :currIdx="currIdx" :key="index" :carouselItem="item"></CarouselItem>
         </div>
 
         <Icon
@@ -36,36 +19,35 @@
             }"
             type="bottomArrow"
             class="arrow bottom"
-            fontSize="40px"
-        />
+            fontSize="40px" />
     </div>
 </template>
-  
-  <script setup>
-import Avatar from '@/components/avatar/index.vue'
-import Icon from '@/components/icon/index.vue'
-import CarouselItem from './CarouselItem.vue'
-import { ref, defineProps, computed, onMounted } from 'vue'
 
-const currIdx = ref(1)
+<script setup>
+import Avatar from '@/components/avatar/index.vue';
+import Icon from '@/components/icon/index.vue';
+import CarouselItem from './CarouselItem.vue';
+import { ref, defineProps, computed, onMounted } from 'vue';
+
+const currIdx = ref(1);
 
 const props = defineProps({
     carouselList: {
         type: Array,
         default: () => [],
     },
-})
+});
 
 const translateY = computed(() => {
-    return `translateY(-${(currIdx.value - 1) * 100}%)`
-})
+    return `translateY(-${(currIdx.value - 1) * 100}%)`;
+});
 
 const handleClick = (idx) => {
-    currIdx.value = Math.max(1, Math.min(idx, props.carouselList.length))
-}
+    currIdx.value = Math.max(1, Math.min(idx, props.carouselList.length));
+};
 </script>
-  
-  <style scoped lang="scss">
+
+<style scoped lang="scss">
 .carousel_container {
     position: relative;
     overflow: hidden;
@@ -126,6 +108,19 @@ const handleClick = (idx) => {
     pointer-events: none;
 }
 
+// 移动端头像放大
+@media (max-width: 768px) {
+    .avatar {
+        top: 15%;
+        left: calc(50% - 6vw);
+
+        :deep(img) {
+            width: 20vw !important;
+            height: 20vw !important;
+        }
+    }
+}
+
 @keyframes jumpUp {
     0% {
         transform: translateY(0);
@@ -150,4 +145,3 @@ const handleClick = (idx) => {
     }
 }
 </style>
-  

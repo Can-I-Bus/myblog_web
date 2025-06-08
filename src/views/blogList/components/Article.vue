@@ -91,6 +91,7 @@ const handleClick = () => {
 <style lang="scss" scoped>
 @use '@/css/media.scss' as *;
 @use '@/css/mixin.scss' as *;
+
 .article_item {
     @include flexAlianCenter();
     justify-content: space-between;
@@ -100,19 +101,63 @@ const handleClick = () => {
     margin-bottom: 20px;
     cursor: pointer;
     transition: all 0.3s;
+
+    @include respond-to('large') {
+        padding: 18px;
+        border-radius: 8px;
+    }
+
+    @include respond-to('middle') {
+        padding: 16px;
+    }
+
+    @include respond-to('small') {
+        flex-direction: column;
+        padding: 15px;
+        align-items: stretch;
+    }
+
     &:hover {
         border-color: var(--textHoverSecColor);
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+
+        @include respond-to('small') {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
     }
+
     &_left {
         width: 0;
         flex: 1;
+
+        @include respond-to('small') {
+            width: 100%;
+            flex: none;
+        }
+
         h4 {
             font-size: 20px;
             font-weight: 500;
             margin-bottom: 14px;
             color: var(--textMainColor);
+            line-height: 1.4;
+
+            @include respond-to('large') {
+                font-size: 18px;
+                margin-bottom: 12px;
+            }
+
+            @include respond-to('middle') {
+                font-size: 17px;
+                margin-bottom: 10px;
+            }
+
+            @include respond-to('small') {
+                font-size: 16px;
+                margin-bottom: 8px;
+            }
         }
+
         > p {
             font-size: 14px;
             margin-bottom: 20px;
@@ -120,27 +165,79 @@ const handleClick = () => {
             line-height: 22px;
             overflow: hidden;
             text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+
+            @include respond-to('large') {
+                margin-bottom: 18px;
+                font-size: 13px;
+                line-height: 20px;
+            }
+
+            @include respond-to('middle') {
+                margin-bottom: 16px;
+                line-height: 19px;
+            }
+
+            @include respond-to('small') {
+                margin-bottom: 12px;
+                font-size: 13px;
+                line-height: 18px;
+                -webkit-line-clamp: 3;
+            }
         }
+
         &_bottom {
             @include flexAlianCenter();
             justify-content: space-between;
+
+            @include respond-to('small') {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+
             &_info {
                 @include flexAlianCenter();
+                flex-wrap: wrap;
+                gap: 15px;
+
+                @include respond-to('small') {
+                    gap: 12px;
+                }
+
                 > div {
                     @include flexAlianCenter();
-                    margin-right: 20px;
                     font-size: 14px;
                     color: var(--textFourthColor);
+
+                    @include respond-to('small') {
+                        font-size: 13px;
+                    }
                 }
             }
+
             &_category {
                 @include flexAlianCenter();
                 margin-left: 20px;
+
+                @include respond-to('small') {
+                    margin-left: 0;
+                }
+
                 > img {
                     width: 16px;
                     height: 16px;
                     margin-right: 5px;
+
+                    @include respond-to('small') {
+                        width: 14px;
+                        height: 14px;
+                        margin-right: 4px;
+                    }
                 }
+
                 > div {
                     font-size: 14px;
                     color: var(--textFourthColor);
@@ -148,26 +245,75 @@ const handleClick = () => {
                     border-radius: 8px;
                     padding: 5px 10px;
                     cursor: pointer;
+                    transition: all 0.2s ease;
+
+                    @include respond-to('small') {
+                        font-size: 12px;
+                        padding: 4px 8px;
+                        border-radius: 6px;
+                    }
+
+                    &:hover {
+                        background-color: var(--textHoverColor);
+                        color: white;
+                    }
                 }
             }
         }
     }
+
     &_right {
         margin-left: 30px;
         width: 180px;
         height: 100px;
+        flex-shrink: 0;
+
+        @include respond-to('large') {
+            margin-left: 25px;
+            width: 160px;
+            height: 90px;
+        }
+
+        @include respond-to('middle') {
+            margin-left: 20px;
+            width: 140px;
+            height: 80px;
+        }
+
+        @include respond-to('small') {
+            margin-left: 0;
+            margin-top: 15px;
+            width: 100%;
+            height: 160px;
+        }
+
         img {
             width: 100%;
             height: 100%;
             border-radius: 10px;
             object-fit: cover;
             object-position: center;
+
+            @include respond-to('large') {
+                border-radius: 8px;
+            }
+
+            @include respond-to('small') {
+                border-radius: 6px;
+            }
         }
     }
 }
+
 .icon {
     width: 16px;
     height: 16px;
     margin-right: 5px;
+
+    @include respond-to('small') {
+        width: 14px;
+        height: 14px;
+        margin-right: 4px;
+    }
 }
 </style>
