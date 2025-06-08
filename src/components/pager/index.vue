@@ -130,6 +130,18 @@ watch(totalPages, (newVal) => {
     padding: 1rem;
     user-select: none;
     flex-wrap: wrap;
+    justify-content: center;
+
+    @media (max-width: 768px) {
+        padding: 0.8rem;
+        gap: 6px;
+    }
+
+    @media (max-width: 480px) {
+        padding: 0.8rem 0.5rem;
+        gap: 8px;
+        justify-content: space-between;
+    }
 
     &-button {
         display: inline-flex;
@@ -142,6 +154,17 @@ watch(totalPages, (newVal) => {
         cursor: pointer;
         transition: all 0.2s ease;
         min-width: 36px;
+
+        @media (max-width: 768px) {
+            padding: 10px 14px;
+            min-width: 40px;
+        }
+
+        @media (max-width: 480px) {
+            padding: 12px 16px;
+            min-width: 44px;
+            border-radius: 8px;
+        }
 
         &:hover:not(:disabled) {
             border-color: var(--textHoverColor);
@@ -159,6 +182,13 @@ watch(totalPages, (newVal) => {
             border-color: var(--textHoverColor);
             color: white;
         }
+
+        &.prev,
+        &.next {
+            @media (max-width: 480px) {
+                flex: 0 0 auto;
+            }
+        }
     }
 
     &-ellipsis {
@@ -172,6 +202,11 @@ watch(totalPages, (newVal) => {
         width: 20px;
         height: 20px;
         fill: currentColor;
+
+        @media (max-width: 480px) {
+            width: 18px;
+            height: 18px;
+        }
     }
 
     &-text {
@@ -186,10 +221,21 @@ watch(totalPages, (newVal) => {
         border-radius: 6px;
         border: 1px solid #e0e0e0;
         background: white;
+        font-size: 14px;
 
         @media (max-width: 768px) {
             display: block;
-            margin-left: 12px;
+            flex: 1;
+            max-width: 140px;
+            margin: 0 8px;
+        }
+
+        @media (max-width: 480px) {
+            flex: 1;
+            max-width: none;
+            margin: 0 12px;
+            padding: 10px 12px;
+            font-size: 15px;
         }
     }
 
@@ -204,13 +250,33 @@ watch(totalPages, (newVal) => {
     }
 }
 
+// 移动端特殊布局调整
 @media (max-width: 480px) {
     .pager-button:not(.prev):not(.next) {
         display: none;
     }
+}
 
-    .pager-select {
-        margin-left: auto;
+// 极小屏幕适配
+@media (max-width: 360px) {
+    .pager {
+        padding: 0.6rem 0.3rem;
+
+        &-button {
+            padding: 10px 12px;
+            min-width: 40px;
+
+            &.prev,
+            &.next {
+                padding: 10px 8px;
+            }
+        }
+
+        &-select {
+            margin: 0 8px;
+            padding: 8px 10px;
+            font-size: 14px;
+        }
     }
 }
 </style>
