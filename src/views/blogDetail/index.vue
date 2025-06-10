@@ -78,7 +78,7 @@
                     <span class="comments-count">{{ commentTotal }} 条评论</span>
                 </div>
 
-                <Comment class="comment-form" :articleId="currArticleid" @updateComment="getCommentList" />
+                <Comment ref="commentForm" class="comment-form" :loading="commentLoading" @submit="handlePostComment" />
 
                 <div class="comments-list">
                     <div v-if="commentList.length > 0">
@@ -133,6 +133,7 @@ import hljs from 'highlight.js';
 import { ref, getCurrentInstance, onMounted, computed, nextTick, watch, onBeforeUnmount } from 'vue';
 import { useRoute } from 'vue-router';
 import { parseTime } from '@/utils';
+import toast from '@/utils/toast/index';
 
 const { $api } = getCurrentInstance().proxy;
 const route = useRoute();
@@ -152,6 +153,8 @@ const commentTotal = ref(0);
 const commentList = ref([]);
 const articleList = ref([]);
 const currArticleid = ref('');
+const commentForm = ref(null);
+const commentLoading = ref(false);
 
 // 移动端状态
 const showToc = ref(false);
@@ -337,6 +340,34 @@ const applyHighlight = () => {
     document.querySelectorAll('.html-render pre code').forEach((block) => {
         hljs.highlightElement(block);
     });
+};
+
+const handlePostComment = async (commentData) => {
+    commentLoading.value = true;
+    try {
+        const data = {
+            article_id: currArticleid.value,
+            content: commentData.content,
+            nickname: commentData.nickname,
+        };
+        const res = await $api({ type: 'postComment', data });
+        if (res.code === 0) {
+            commentForm.value.reset();
+            toast({
+                type: 'success',
+                message: '评论发布成功',
+                duration: 2000,
+            });
+            setTimeout(() => {
+                getCommentList(); // 刷新评论列表
+            }, 200);
+        }
+    } catch (error) {
+        console.error('评论发布失败', error);
+        toast({ type: 'error', message: '评论发布失败，请稍后再试' });
+    } finally {
+        commentLoading.value = false;
+    }
 };
 
 const init = async () => {

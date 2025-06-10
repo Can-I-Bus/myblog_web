@@ -1,15 +1,15 @@
 <template>
     <div class="blog_category_list_wrap" v-loading="loading">
         <div class="blog_category_list">
-            <h2>Blog | 博客</h2>
+            <h2 class="animate-in">Blog | 博客</h2>
             <div style="height: 100%">
                 <Empty v-if="articleList.length === 0" />
-                <div v-else>
-                    <Article v-for="item in articleList" :key="item.id" :article="item" />
+                <div v-else class="animate-in-container">
+                    <Article v-for="(item, index) in articleList" :key="item.id" :article="item" :style="{ animationDelay: `${index * 0.1}s` }" class="animate-item" />
                 </div>
             </div>
         </div>
-        <Pager :total="total" :currentPage="page" :pageSize="limit" @pageChange="handlePageChange" />
+        <Pager :total="total" :currentPage="page" :pageSize="limit" @pageChange="handlePageChange" class="animate-in" />
     </div>
 </template>
 <script setup>
@@ -132,6 +132,32 @@ onMounted(() => {
                 margin-bottom: 20px;
             }
         }
+    }
+}
+
+// 进入动画样式
+.animate-in {
+    animation: fade-in 0.5s ease forwards;
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+.animate-in-container {
+    .animate-item {
+        animation: fade-in 0.6s ease forwards;
+        opacity: 0;
+        transform: translateY(20px);
+    }
+}
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
 }
 </style>

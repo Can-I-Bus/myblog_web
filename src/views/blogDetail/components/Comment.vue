@@ -20,8 +20,8 @@
             </div>
 
             <div class="form_footer">
-                <button class="submit_btn" @click="handleClick" :disabled="loading || !canSubmit">
-                    <template v-if="!loading">
+                <button class="submit_btn" @click="handleClick" :disabled="props.loading || !canSubmit">
+                    <template v-if="!props.loading">
                         <span>发布评论</span>
                         <svg class="send_icon" viewBox="0 0 24 24">
                             <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
@@ -38,18 +38,17 @@
 
 <script setup>
 import toast from '@/utils/toast/index';
-import { ref, getCurrentInstance, computed } from 'vue';
+import { ref, computed, defineProps, defineEmits, defineExpose } from 'vue';
 
 const props = defineProps({
-    articleId: {
-        type: Number,
-        required: true,
+    loading: {
+        type: Boolean,
+        default: false,
     },
 });
 
-const emits = defineEmits(['updateComment']);
-const { $api } = getCurrentInstance().proxy;
-const loading = ref(false);
+const emits = defineEmits(['submit']);
+
 const comment = ref('');
 const name = ref('');
 
@@ -69,7 +68,7 @@ const commentInputChange = (event) => {
     }
 };
 
-const handleClick = async () => {
+const handleClick = () => {
     if (!canSubmit.value) {
         toast({
             type: 'warning',
@@ -78,31 +77,20 @@ const handleClick = async () => {
         });
         return;
     }
-
-    try {
-        loading.value = true;
-        const data = {
-            article_id: props.articleId,
-            content: comment.value.trim(),
-            nickname: name.value.trim(),
-        };
-        const res = await $api({ type: 'postComment', data });
-        if (res.code === 0) {
-            comment.value = '';
-            name.value = '';
-            toast({
-                type: 'success',
-                message: '评论发布成功',
-                duration: 2000,
-                cb: () => {
-                    emits('updateComment');
-                },
-            });
-        }
-    } finally {
-        loading.value = false;
-    }
+    emits('submit', {
+        content: comment.value.trim(),
+        nickname: name.value.trim(),
+    });
 };
+
+const reset = () => {
+    comment.value = '';
+    name.value = '';
+};
+
+defineExpose({
+    reset,
+});
 </script>
 
 <style scoped lang="scss">
@@ -145,6 +133,8 @@ const handleClick = async () => {
 .comment_form {
     flex: 1;
     min-width: 0;
+    width: 100%;
+    box-sizing: border-box;
 
     .form_header {
         margin-bottom: 20px;

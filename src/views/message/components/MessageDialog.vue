@@ -12,8 +12,8 @@
                         </button>
                     </div>
                     <div class="dialog-body">
-                        <!-- 使用现有的Comment组件，但不传递articleId -->
-                        <Comment :article-id="0" @update-comment="handleCommentSubmit" />
+                        <!-- 使用改造后的Comment组件 -->
+                        <Comment ref="commentForm" :loading="loading" @submit="handleCommentSubmit" />
                     </div>
                 </div>
             </div>
@@ -22,8 +22,9 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits } from 'vue';
+import { defineProps, defineEmits, ref, getCurrentInstance } from 'vue';
 import Comment from '../../blogDetail/components/Comment.vue';
+import toast from '@/utils/toast/index';
 
 const props = defineProps({
     modelValue: {
@@ -37,6 +38,10 @@ const props = defineProps({
 });
 
 const emit = defineEmits(['update:modelValue', 'submit']);
+const { $api } = getCurrentInstance().proxy;
+
+const loading = ref(false);
+const commentForm = ref(null);
 
 const close = () => {
     emit('update:modelValue', false);
@@ -48,9 +53,22 @@ const closeOnClickOutside = (e) => {
     }
 };
 
-const handleCommentSubmit = () => {
-    emit('submit');
-    close();
+const handleCommentSubmit = async (formData) => {
+    loading.value = true;
+    try {
+        const res = await $api({ type: 'addMessage', data: formData });
+        if (res.code === 0) {
+            commentForm.value.reset();
+            toast({ type: 'success', message: '留言成功！', duration: 2000 });
+            emit('submit');
+            close();
+        }
+    } catch (error) {
+        console.error('留言失败', error);
+        toast({ type: 'error', message: '留言失败，请稍后再试' });
+    } finally {
+        loading.value = false;
+    }
 };
 </script>
 

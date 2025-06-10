@@ -60,9 +60,9 @@ const showMessageDialog = ref(false);
 
 // 获取留言列表
 const getMessageList = async () => {
+    items.value = [];
     loading.value = true;
     try {
-        // 这里需要根据实际API调整
         const res = await $api({
             type: 'getMessageList',
             data: { page: page.value, limit: limit.value },
@@ -78,39 +78,12 @@ const getMessageList = async () => {
             }));
 
             total.value = res.data?.count || 0;
-        } else {
-            // 模拟数据用于开发，实际项目中可以删除这部分
-            generateMockData();
         }
     } catch (error) {
         console.error('获取留言列表失败', error);
-        // 模拟数据用于开发，实际项目中可以删除这部分
-        generateMockData();
     } finally {
         loading.value = false;
     }
-};
-
-// 模拟数据，用于开发阶段，实际项目可删除
-const generateMockData = () => {
-    const mockItems = [];
-    const now = new Date();
-
-    for (let i = 0; i < limit.value; i++) {
-        const date = new Date(now.getTime() - i * 86400000 * Math.random());
-        mockItems.push({
-            id: i + (page.value - 1) * limit.value + 1,
-            nickname: `用户${i + (page.value - 1) * limit.value + 1}`,
-            content: `这是第${i + (page.value - 1) * limit.value + 1}条留言内容，这是模拟的留言内容，可能会比较长，这样可以测试不同长度的显示效果。${
-                Math.random() > 0.5 ? '再来一些额外的文字让内容更长一些。' : ''
-            }${Math.random() > 0.7 ? '再来一段，让内容长度变得更加随机多样。' : ''}`,
-            created_at: date.toISOString(),
-            height: Math.floor(Math.random() * 100) + 200,
-        });
-    }
-
-    items.value = mockItems;
-    total.value = 200; // 模拟总数
 };
 
 // 分页变化
@@ -127,7 +100,6 @@ const handlePageChange = (newPage) => {
 
 // 提交留言后的处理
 const handleMessageSubmit = () => {
-    // 重新加载第一页数据
     page.value = 1;
     getMessageList();
 };
@@ -198,6 +170,12 @@ onMounted(() => {
     overflow-y: auto;
     overflow-x: hidden;
     min-height: 0; /* 重要：让flex子元素能够收缩 */
+    /* 隐藏滚动条但保持滚动功能 */
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+    &::-webkit-scrollbar {
+        display: none; /* Chrome, Safari and Opera */
+    }
 
     @include respond-to('large') {
         width: 92%;
@@ -214,33 +192,6 @@ onMounted(() => {
         padding: 0 15px;
         display: flex;
         justify-content: center;
-    }
-
-    /* 自定义滚动条样式 */
-    &::-webkit-scrollbar {
-        width: 6px;
-
-        @include respond-to('small') {
-            width: 4px;
-        }
-    }
-
-    &::-webkit-scrollbar-track {
-        background: rgba(var(--borderMainColorRGB), 0.1);
-        border-radius: 3px;
-    }
-
-    &::-webkit-scrollbar-thumb {
-        background: rgba(var(--textSecColorRGB), 0.3);
-        border-radius: 3px;
-
-        &:hover {
-            background: rgba(var(--textHoverColorRGB), 0.5);
-        }
-
-        &:active {
-            background: rgba(var(--textHoverColorRGB), 0.7);
-        }
     }
 }
 
@@ -378,6 +329,13 @@ onMounted(() => {
 
     @include respond-to('small') {
         padding: 40px 15px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 100%;
+        height: auto;
+        min-height: 200px;
     }
 
     .empty-icon {
