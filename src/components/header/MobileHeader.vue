@@ -18,7 +18,7 @@
                 <div class="mobile-menu-container">
                     <div class="menu-header">
                         <img src="/avatar.png" alt="头像" class="menu-avatar" />
-                        <h3>个人博客</h3>
+                        <h3>MAX的博客</h3>
                     </div>
                     <div class="menu-links">
                         <router-link class="menu-item" to="/home" @click="closeMenu" :class="{ active: route.path === '/home' }" active-class="" exact-active-class="">首页</router-link>

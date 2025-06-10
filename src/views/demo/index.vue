@@ -1,15 +1,16 @@
 <template>
     <div class="demo_list_wrap" v-loading="loading">
         <div class="demo_list">
-            <h2>一些小Demo，产自闲暇空余...</h2>
+            <h2 class="animate-in">一些小Demo，产自闲暇空余...</h2>
+            <p class="tips animate-in" style="animation-delay: 0.1s">Tips: demo暂无预览页面，点击源码地址跳转至github直接看代码吧～</p>
             <div style="height: 100%">
                 <Empty v-if="demoList.length === 0" />
-                <div v-else>
-                    <Demo v-for="item in demoList" :key="item.id" :demo="item" />
+                <div v-else class="animate-in-container">
+                    <Demo v-for="(item, index) in demoList" :key="item.id" :demo="item" :style="{ animationDelay: `${0.2 + index * 0.1}s` }" class="animate-item" />
                 </div>
             </div>
         </div>
-        <Pager :total="total" :currentPage="page" :pageSize="limit" @pageChange="handlePageChange" />
+        <Pager :total="total" :currentPage="page" :pageSize="limit" @pageChange="handlePageChange" class="animate-in" style="animation-delay: 0.3s" />
     </div>
 </template>
 <script setup>
@@ -95,23 +96,42 @@ onMounted(() => {
         h2 {
             font-size: 30px;
             font-weight: 600;
-            margin-bottom: 40px;
+            margin-bottom: 20px;
             text-align: center;
             color: var(--textMainColor);
 
             @include respond-to('large') {
                 font-size: 28px;
-                margin-bottom: 35px;
+                margin-bottom: 25px;
             }
 
             @include respond-to('middle') {
                 font-size: 26px;
-                margin-bottom: 30px;
+                margin-bottom: 20px;
             }
 
             @include respond-to('small') {
                 font-size: 24px;
-                margin-bottom: 25px;
+                margin-bottom: 15px;
+            }
+        }
+
+        .tips {
+            font-size: 14px;
+            color: var(--textSecondaryColor);
+            text-align: center;
+            margin-bottom: 10px;
+            padding: 8px 15px;
+            background-color: var(--bgSecondaryColor);
+            border-radius: 6px;
+            display: inline-block;
+            margin-left: 50%;
+            transform: translateX(-50%);
+
+            @include respond-to('small') {
+                font-size: 12px;
+                padding: 6px 12px;
+                margin-bottom: 10px;
             }
         }
 
@@ -132,6 +152,32 @@ onMounted(() => {
                 margin-bottom: 20px;
             }
         }
+    }
+}
+
+// 进入动画样式
+.animate-in {
+    animation: fade-in 0.5s ease forwards;
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+.animate-in-container {
+    .animate-item {
+        animation: fade-in 0.6s ease forwards;
+        opacity: 0;
+        transform: translateY(20px);
+    }
+}
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
 }
 </style>

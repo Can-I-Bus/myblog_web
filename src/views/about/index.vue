@@ -6,40 +6,56 @@
         <div class="home_body_main">
             <div class="home_body_main_top" :class="{ 'mobile-active': activeTab === 'info' }">
                 <div>
-                    <h2>About Me</h2>
-                    <p>💻一名Web developmenter</p>
-                    <p>🧠一名Web developmenter</p>
-                    <p>🧑‍💻一名Web developmenter</p>
+                    <h2>Description</h2>
+                    <p>💻 一名Web developmenter</p>
+                    <p>🧠 想到有趣的点子就会去实现</p>
+                    <p>🧑‍💻 努力成为一名更好的开发者</p>
                 </div>
                 <div>
                     <Signature />
                 </div>
             </div>
             <div class="home_body_main_part_one" :class="{ 'mobile-active': activeTab === 'experience' }">
-                <h2>What have I been doing?</h2>
+                <h2>About Me</h2>
                 <div>
                     <div class="home_body_main_part_one_item">
-                        <Icon />
                         <div>
-                            <p>Web Developer</p>
-                            <p>A Developer with a passion for creating innovative and user-friendly web applications.</p>
+                            <p>前端开发工程师💻</p>
+                            <p>热爱技术，不断提升，致力于成为更优秀的开发者</p>
                         </div>
                     </div>
                     <div class="home_body_main_part_one_item">
-                        <Icon />
                         <div>
-                            <p>Web Developer</p>
-                            <p>The blog is being updated to a new version, with a more modern and responsive design.</p>
+                            <p>持续学习🧠</p>
+                            <p>保持对新技术的好奇心，不断探索前端领域的最新发展，乐于分享技术心得。</p>
+                        </div>
+                    </div>
+                    <div class="home_body_main_part_one_item">
+                        <div>
+                            <p>创意实践💡</p>
+                            <p>将创意转化为实际项目与demo，注重用户体验与代码质量，追求技术与体验的平衡</p>
+                        </div>
+                    </div>
+                    <div class="home_body_main_part_one_item">
+                        <div>
+                            <p>爱喝咖啡☕️</p>
+                            <p>一杯咖啡，一段代码，普通简单而充实的工作日常。</p>
+                        </div>
+                    </div>
+                    <div class="home_body_main_part_one_item">
+                        <div>
+                            <p>喜欢美食🍔</p>
+                            <p>喜欢美食，喜欢探店，喜欢有烟火气的街边小摊和苍蝇馆子，喜欢做菜</p>
                         </div>
                     </div>
                 </div>
             </div>
 
             <div class="home_body_main_part_two" :class="{ 'mobile-active': activeTab === 'demo' }">
-                <h2>一些demo，突然想codeing或突然有了些想法，于是它们诞生了～</h2>
+                <h2>一些项目与demo，产自下班后与周末的闲暇空余时间</h2>
                 <div>
                     <div v-for="item in demoList" :key="item.id" class="home_body_main_part_two_item">
-                        <img :src="baseConfig.baseURL + item.thumb" />
+                        <img style="margin-right: 10px" :src="item.thumb" />
                         <div>
                             <p>{{ item.name }}</p>
                             <p>{{ item.description }}</p>
@@ -65,19 +81,15 @@
         <!-- 移动端展示的底部导航 -->
         <div class="mobile-nav-tabs">
             <div class="tab" @click="activeTab = 'info'" :class="{ active: activeTab === 'info' }">
-                <Icon type="user" fontSize="20px" />
-                <span>关于我</span>
+                <span>简介</span>
             </div>
             <div class="tab" @click="activeTab = 'experience'" :class="{ active: activeTab === 'experience' }">
-                <Icon type="code" fontSize="20px" />
-                <span>经历</span>
+                <span>关于我</span>
             </div>
             <div class="tab" @click="activeTab = 'demo'" :class="{ active: activeTab === 'demo' }">
-                <Icon type="folder" fontSize="20px" />
                 <span>Demo</span>
             </div>
             <div class="tab" @click="activeTab = 'blog'" :class="{ active: activeTab === 'blog' }">
-                <Icon type="blog" fontSize="20px" />
                 <span>博客</span>
             </div>
         </div>
