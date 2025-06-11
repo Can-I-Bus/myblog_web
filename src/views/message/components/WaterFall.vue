@@ -204,7 +204,6 @@ watch(
     transition: all 0.3s ease;
 
     @include respond-to('small') {
-        // 移动端单列时确保居中
         margin: 0 auto !important;
         max-width: 400px;
         width: calc(100% - 20px) !important;

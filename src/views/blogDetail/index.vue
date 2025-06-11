@@ -1,5 +1,5 @@
 <template>
-    <div class="blog_detail_wrap" v-loading="loadng">
+    <div class="blog_detail_wrap" v-loading="loading">
         <!-- 阅读进度条 -->
         <div class="reading-progress">
             <div class="progress-bar" :style="{ width: readingProgress + '%' }"></div>
@@ -131,14 +131,15 @@ import Empty from '@/components/empty/index.vue';
 import Icon from '@/components/icon/index.vue';
 import hljs from 'highlight.js';
 import { ref, getCurrentInstance, onMounted, computed, nextTick, watch, onBeforeUnmount } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { parseTime } from '@/utils';
 import toast from '@/utils/toast/index';
 
 const { $api } = getCurrentInstance().proxy;
 const route = useRoute();
+const router = useRouter();
 const activeHeadingId = ref('');
-const loadng = ref(false);
+const loading = ref(false);
 const articleContent = ref(null);
 const articleObserver = ref(null);
 const commentListPage = ref(1);
@@ -298,6 +299,7 @@ const getArticle = async () => {
 };
 
 const getCommentList = async () => {
+    loading.value = true;
     const data = {
         article_id: currArticleid.value,
         page: commentQuery.value.page,
@@ -308,6 +310,7 @@ const getCommentList = async () => {
         commentList.value = res.data.rows;
         commentTotal.value = res.data.count;
     }
+    loading.value = false;
 };
 
 const handlePageChange = (page) => {
@@ -324,8 +327,21 @@ const handleArticleClick = (item) => {
     // 更新当前文章ID
     currArticleid.value = item.id;
 
+    // 更新路由，保持URL与当前文章一致
+    router.push({
+        path: `/blog/${route.params.id}`,
+        query: {
+            article_id: item.id,
+            name: route.query.name,
+            icon: route.query.icon,
+        },
+    });
+
     // 重置阅读进度
     readingProgress.value = 0;
+
+    //重新获取评论列表
+    getCommentList();
 
     // 跳转到页面顶部
     setTimeout(() => {
@@ -364,14 +380,18 @@ const handlePostComment = async (commentData) => {
         }
     } catch (error) {
         console.error('评论发布失败', error);
-        toast({ type: 'error', message: '评论发布失败，请稍后再试' });
+        toast({
+            type: 'error',
+            message: '评论发布失败，请稍后再试',
+            duration: 2000,
+        });
     } finally {
         commentLoading.value = false;
     }
 };
 
 const init = async () => {
-    loadng.value = true;
+    loading.value = true;
     window.location.hash = '';
     await getArticle();
     await getCommentList();
@@ -382,7 +402,7 @@ const init = async () => {
     if (route.query.article_id) {
         currArticleid.value = route.query.article_id;
     }
-    loadng.value = false;
+    loading.value = false;
 };
 
 watch(currArticle, async () => {
@@ -1098,7 +1118,6 @@ html {
     }
 
     .nav-spacer {
-        // 空占位符，用于保持网格布局
     }
 }
 

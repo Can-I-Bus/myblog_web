@@ -59,13 +59,21 @@ const handleCommentSubmit = async (formData) => {
         const res = await $api({ type: 'addMessage', data: formData });
         if (res.code === 0) {
             commentForm.value.reset();
-            toast({ type: 'success', message: '留言成功！', duration: 2000 });
+            toast({
+                type: 'success',
+                message: '留言成功！',
+                duration: 2000,
+            });
             emit('submit');
             close();
         }
     } catch (error) {
         console.error('留言失败', error);
-        toast({ type: 'error', message: '留言失败，请稍后再试' });
+        toast({
+            type: 'error',
+            message: '留言失败，请稍后再试',
+            duration: 2000,
+        });
     } finally {
         loading.value = false;
     }
