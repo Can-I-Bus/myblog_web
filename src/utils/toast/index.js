@@ -12,33 +12,61 @@ const getIconCom = (type) => {
     };
 };
 
-const toast = ({ message = '', targetEl = document.body, type = 'info', duration = 2000, cb = null } = options) => {
+// 创建一个专用于toast的容器
+const getToastContainer = () => {
+    let container = document.getElementById('global-toast-container');
+    if (!container) {
+        container = document.createElement('div');
+        container.id = 'global-toast-container';
+        container.style.position = 'fixed';
+        container.style.top = '10%';
+        container.style.left = '50%';
+        container.style.transform = 'translate(-50%, -50%)';
+        container.style.zIndex = '9999'; // 确保最高层级
+        container.style.pointerEvents = 'none'; // 防止阻挡交互
+        document.body.appendChild(container);
+    }
+    return container;
+};
+
+const toast = ({ message = '', type = 'info', duration = 2000, cb = null } = {}) => {
     const { el: iconEl, unmount: unmountIcon } = getIconCom(type);
-    console.log(iconEl);
-    const container = document.createElement('div');
+
+    // 获取全局toast容器
+    const toastContainer = getToastContainer();
+
+    // 创建单个toast元素
+    const toastElement = document.createElement('div');
     const messageEl = document.createElement('span');
     messageEl.innerText = message;
-    container.appendChild(iconEl);
-    container.appendChild(messageEl);
-    container.classList.add('toast_wrap');
-    container.classList.add(`toast_wrap_${type}`);
-    const targetElPos = getComputedStyle(targetEl).position;
-    if (targetElPos === 'static') {
-        targetEl.style.position = 'relative';
-    }
-    targetEl.appendChild(container);
-    container.clientHeight; // 触发重绘
-    container.style.opacity = '1';
-    container.style.transform = 'translate(-50%, -50%) translateY(0px)';
+    toastElement.appendChild(iconEl);
+    toastElement.appendChild(messageEl);
+    toastElement.classList.add('toast_wrap');
+    toastElement.classList.add(`toast_wrap_${type}`);
+
+    // 将toast添加到固定容器
+    toastContainer.appendChild(toastElement);
+
+    // 触发重绘并显示toast
+    toastElement.clientHeight;
+    toastElement.style.opacity = '1';
+    toastElement.style.transform = 'translateY(0)';
+
+    // 设置定时器移除toast
     setTimeout(() => {
-        container.style.opacity = '0';
-        container.style.transform = 'translate(-50%, -50%) translateY(-30px)';
-        container.addEventListener(
+        toastElement.style.opacity = '0';
+        toastElement.style.transform = 'translateY(-30px)';
+        toastElement.addEventListener(
             'transitionend',
             () => {
                 cb?.();
                 unmountIcon();
-                targetEl.removeChild(container);
+                toastContainer.removeChild(toastElement);
+
+                // 如果容器为空，也可以移除容器
+                if (toastContainer.childNodes.length === 0) {
+                    document.body.removeChild(toastContainer);
+                }
             },
             { once: true }
         );
