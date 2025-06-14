@@ -392,17 +392,22 @@ const handlePostComment = async (commentData) => {
 
 const init = async () => {
     loading.value = true;
-    window.location.hash = '';
-    await getArticle();
-    await getCommentList();
-    window.addEventListener('hashchange', () => {
-        const hash = window.location.hash.slice(1);
-        if (hash) handleNavClick(hash);
-    });
-    if (route.query.article_id) {
-        currArticleid.value = route.query.article_id;
+    try {
+        window.location.hash = '';
+        await getArticle();
+        await getCommentList();
+        window.addEventListener('hashchange', () => {
+            const hash = window.location.hash.slice(1);
+            if (hash) handleNavClick(hash);
+        });
+        if (route.query.article_id) {
+            currArticleid.value = route.query.article_id;
+        }
+    } catch (error) {
+        console.error('初始化失败', error);
+    } finally {
+        loading.value = false;
     }
-    loading.value = false;
 };
 
 watch(currArticle, async () => {
