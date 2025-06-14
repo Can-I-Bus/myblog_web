@@ -12,7 +12,7 @@ const router = createRouter({
             path: '/',
             name: 'layout',
             component: () => import('../views/layout/index.vue'),
-            redirect: '/blog',
+            redirect: '/home',
             children: [
                 //博客详情
                 {
