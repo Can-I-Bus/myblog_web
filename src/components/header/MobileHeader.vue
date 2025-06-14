@@ -2,7 +2,7 @@
     <div class="mobile-header">
         <div class="mobile-header-container" :class="{ 'border-bottom': isScroll }">
             <div class="logo-container">
-                <Signature :width="'60pt'" :height="'15pt'" />
+                <Signature :width="'60pt'" :height="'15pt'" @click="router.push('/home')" />
             </div>
             <div class="menu-button" @click="toggleMenu">
                 <div class="menu-icon">
@@ -37,7 +37,7 @@
                     </div>
                     <div class="menu-footer">
                         <ThemeSwitch />
-                        <Icon class="icon" type="github" fontSize="24px" />
+                        <Icon class="icon" type="github" fontSize="24px" @click="handleToGithub" />
                     </div>
                 </div>
             </div>
@@ -53,7 +53,9 @@ import Icon from '../icon/index.vue';
 import ThemeSwitch from '../themeSwitch/index.vue';
 import { useRoute } from 'vue-router';
 import { ref, onMounted, onBeforeUnmount } from 'vue';
+import { useRouter } from 'vue-router';
 
+const router = useRouter();
 const route = useRoute();
 const isScroll = ref(false);
 const menuOpen = ref(false);
@@ -88,6 +90,10 @@ onBeforeUnmount(() => {
     window.removeEventListener('scroll', scroll);
     document.body.style.overflow = '';
 });
+
+const handleToGithub = () => {
+    window.open('https://github.com/Can-I-Bus', '_blank');
+};
 </script>
 
 <style scoped lang="scss">

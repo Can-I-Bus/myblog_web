@@ -1,7 +1,7 @@
 <template>
     <div :class="['header_wrap', isScroll ? 'border_bottom' : '']">
         <div class="header_left">
-            <Signature :width="'80pt'" :height="'20pt'" />
+            <Signature :width="'80pt'" :height="'20pt'" @click="router.push('/home')" />
         </div>
         <div class="header_right">
             <div class="header_nav">
@@ -13,7 +13,7 @@
             </div>
             <div class="header_actions">
                 <ThemeSwitch />
-                <Icon class="icon" type="github" fontSize="24px" />
+                <Icon class="icon" type="github" fontSize="24px" @click="handleToGithub" />
                 <div class="avatar_container">
                     <img src="/avatar.png" alt="头像" class="avatar" />
                 </div>
@@ -27,6 +27,9 @@ import Icon from '../icon/index.vue';
 import ThemeSwitch from '../themeSwitch/index.vue';
 import { useRoute } from 'vue-router';
 import { ref, onMounted, onBeforeUnmount } from 'vue';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
 const route = useRoute();
 const isScroll = ref(false);
 
@@ -45,6 +48,10 @@ onMounted(() => {
 onBeforeUnmount(() => {
     window.removeEventListener('scroll', scroll);
 });
+
+const handleToGithub = () => {
+    window.open('https://github.com/Can-I-Bus', '_blank');
+};
 </script>
 <style scoped lang="scss">
 @use '../../css/media.scss' as *;
