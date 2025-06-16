@@ -26,13 +26,18 @@ const limit = ref(50);
 const loading = ref(true);
 const getDemoList = async () => {
     loading.value = true;
-    const data = { page: page.value, limit: limit.value };
-    const res = await $api({ type: 'getDemoList', data });
-    if (res.code === 0) {
-        demoList.value = res?.data?.rows ?? [];
-        total.value = res?.data?.count ?? 0;
+    try {
+        const data = { page: page.value, limit: limit.value };
+        const res = await $api({ type: 'getDemoList', data });
+        if (res.code === 0) {
+            demoList.value = res?.data?.rows ?? [];
+            total.value = res?.data?.count ?? 0;
+        }
+    } catch (error) {
+        console.error('获取demo列表失败', error);
+    } finally {
+        loading.value = false;
     }
-    loading.value = false;
 };
 const handlePageChange = (pageNum) => {
     page.value = pageNum;
@@ -118,15 +123,11 @@ onMounted(() => {
 
         .tips {
             font-size: 14px;
-            color: var(--textSecondaryColor);
+            color: var(--textFourthColor);
             text-align: center;
             margin-bottom: 10px;
             padding: 8px 15px;
-            background-color: var(--bgSecondaryColor);
             border-radius: 6px;
-            display: inline-block;
-            margin-left: 50%;
-            transform: translateX(-50%);
 
             @include respond-to('small') {
                 font-size: 12px;

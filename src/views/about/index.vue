@@ -54,7 +54,7 @@
             <div class="home_body_main_part_two" :class="{ 'mobile-active': activeTab === 'demo' }">
                 <h2>一些项目与demo，产自下班后与周末的闲暇空余时间</h2>
                 <div>
-                    <div v-for="item in demoList" :key="item.id" class="home_body_main_part_two_item">
+                    <div style="cursor: pointer" @click="router.push('/demo')" v-for="item in demoList" :key="item.id" class="home_body_main_part_two_item">
                         <img style="margin-right: 10px" :src="item.thumb" />
                         <div>
                             <p>{{ item.name }}</p>
@@ -103,8 +103,8 @@ import BlogCategory from './components/BlogCategory.vue';
 import baseConfig from '@/config/http.config';
 import { ref, onMounted, getCurrentInstance } from 'vue';
 import { useRouter } from 'vue-router';
-const router = useRouter();
 const { $api } = getCurrentInstance().proxy;
+const router = useRouter();
 const demoList = ref([]);
 const blogCategoryList = ref([]);
 const activeTab = ref('info'); // 控制移动端当前激活的标签
