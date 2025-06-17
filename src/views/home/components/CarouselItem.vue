@@ -141,6 +141,7 @@ watch(
     p {
         opacity: 0;
         overflow: hidden;
+        white-space: nowrap;
     }
 
     p:nth-of-type(1) {
@@ -153,20 +154,21 @@ watch(
         }
     }
 
-    p:nth-of-type(2) {
+    .desc-text {
         position: relative;
+        display: inline-block;
         font-size: 28px;
 
         @include respond-to('small') {
             font-size: 18px;
         }
 
-        &::before {
-            position: absolute;
+        &::after {
             content: '';
-            right: 10px;
-            top: 5%;
-            height: 90%;
+            display: inline-block;
+            vertical-align: middle;
+            margin-left: 10px;
+            height: 1em;
             width: 1px;
             background-color: #fff;
             animation: almostToShadow 0.8s ease-in-out infinite;
