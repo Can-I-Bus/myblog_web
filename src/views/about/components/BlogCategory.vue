@@ -1,6 +1,6 @@
 <template>
     <div class="blog_category_wrap">
-        <div v-for="(item, index) in categoryList" :key="item.id" class="blog_category_item" :style="{ '--item-index': index }" @click.stop="handleItemClick(item.id)">
+        <div v-for="(item, index) in categoryList" :key="item.id" class="blog_category_item" :style="{ '--item-index': index }" @click.stop="handleItemClick(item)">
             <div class="category_content">
                 <div class="category_icon">
                     <img :src="item.icon" alt="分类图标" />
@@ -23,6 +23,7 @@
 </template>
 
 <script setup name="BlogCategory">
+import toast from '@/utils/toast';
 const emits = defineEmits(['handleClick']);
 const props = defineProps({
     categoryList: {
@@ -31,8 +32,12 @@ const props = defineProps({
     },
 });
 
-const handleItemClick = (id) => {
-    emits('handleClick', id);
+const handleItemClick = (item) => {
+    if (item.article_count > 0) {
+        emits('handleClick', item.id);
+    } else {
+        toast({ message: '该分类暂无文章哦～' });
+    }
 };
 </script>
 
