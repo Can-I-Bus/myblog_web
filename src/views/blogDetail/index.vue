@@ -23,19 +23,19 @@
                 <div class="article-meta">
                     <span class="category">
                         <img :src="currArticle?.category?.icon" alt="分类图标" />
-                        {{ currArticle?.category?.name }}
+                        {{ currArticle?.category?.name ?? '暂无' }}
                     </span>
-                    <span class="date">{{ parseTime(currArticle?.created_at) }}</span>
+                    <span class="date">{{ currArticle?.created_at ? parseTime(currArticle.created_at) : '暂无' }}</span>
                 </div>
-                <h1 class="article-title">{{ currArticle?.title }}</h1>
+                <h1 class="article-title">{{ currArticle?.title ?? '暂无' }}</h1>
                 <div class="article-stats">
                     <span class="stat-item">
                         <Icon type="eye" fontSize="16px" />
-                        {{ currArticle?.scan_number }} 次阅读
+                        {{ currArticle?.scan_number ?? 0 }} 次阅读
                     </span>
                     <span class="stat-item">
                         <Icon type="comment" fontSize="16px" />
-                        {{ currArticle?.comment_number }} 条评论
+                        {{ currArticle?.comment_number ?? 0 }} 条评论
                     </span>
                 </div>
             </div>
@@ -619,9 +619,9 @@ html {
 }
 
 // 右侧目录导航特殊处理
-.blog_detail_sidebar_right {
-    overflow-y: hidden; // 让BlogNav组件自己控制滚动
-}
+// .blog_detail_sidebar_right {
+//     overflow-y: hidden; // 让BlogNav组件自己控制滚动
+// }
 
 .sidebar-header {
     display: none;
