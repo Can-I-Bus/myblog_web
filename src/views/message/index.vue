@@ -12,7 +12,7 @@
                     <div class="message-item" :style="{ height: item.height + 'px' }">
                         <div class="message-item-header">
                             <div class="user-avatar">
-                                <img :src="item.avatar || '/message_avatar.png'" alt="用户头像" />
+                                <img src="../../../public/comment_avatar.png" alt="用户头像" />
                             </div>
                             <div class="user-info">
                                 <h3>{{ item.nickname || '匿名用户' }}</h3>
