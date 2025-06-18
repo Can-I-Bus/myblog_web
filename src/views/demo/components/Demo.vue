@@ -10,19 +10,15 @@
             <div class="github_link">
                 <Icon type="github" />
                 <span>源码地址: </span>
-                <a :href="'https://www.baidu.com'" target="_blank">{{ github }}</a>
+                <a :href="github" target="_blank">{{ github }}</a>
             </div>
         </div>
         <div class="demo_item_right">
-            <img
-                :src="'http://max-mysite.oss-cn-hangzhou.aliyuncs.com/uploads/283d1dc769e096a464f7e2d1adcfbe9c.png'"
-                v-if="demo?.thumb && demo?.thumb !== ''"
-                @click="openPreview"
-                style="cursor: zoom-in" />
+            <img :src="demo.thumb" v-if="demo?.thumb && demo?.thumb !== ''" @click="openPreview" style="cursor: zoom-in" />
             <Empty v-else emptyText="暂无封面" />
         </div>
         <Teleport to="body">
-            <ImagePreview :img="'http://max-mysite.oss-cn-hangzhou.aliyuncs.com/uploads/283d1dc769e096a464f7e2d1adcfbe9c.png'" :visible="previewVisible" @close="closePreview" />
+            <ImagePreview :img="previewImg" :visible="previewVisible" @close="closePreview" />
         </Teleport>
     </div>
 </template>
