@@ -37,7 +37,7 @@ const props = defineProps({
 });
 
 const title = computed(() => {
-    return props.demo?.title ?? '暂无标题';
+    return props.demo?.name ?? '暂无标题';
 });
 
 const github = computed(() => {
