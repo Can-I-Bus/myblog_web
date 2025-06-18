@@ -55,7 +55,6 @@
                 <h2>一些项目与demo，产自下班后与周末的闲暇空余时间</h2>
                 <div>
                     <div style="cursor: pointer" @click="router.push('/demo')" v-for="item in demoList" :key="item.id" class="home_body_main_part_two_item">
-                        <img style="margin-right: 10px" :src="item.thumb" />
                         <div>
                             <p>{{ item.name }}</p>
                             <p>{{ item.description }}</p>

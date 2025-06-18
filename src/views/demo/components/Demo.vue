@@ -14,17 +14,25 @@
             </div>
         </div>
         <div class="demo_item_right">
-            <img :src="demo.thumb" v-if="demo?.thumb && demo?.thumb !== ''" />
+            <img
+                :src="'http://max-mysite.oss-cn-hangzhou.aliyuncs.com/uploads/283d1dc769e096a464f7e2d1adcfbe9c.png'"
+                v-if="demo?.thumb && demo?.thumb !== ''"
+                @click="openPreview"
+                style="cursor: zoom-in" />
             <Empty v-else emptyText="暂无封面" />
         </div>
+        <Teleport to="body">
+            <ImagePreview :img="'http://max-mysite.oss-cn-hangzhou.aliyuncs.com/uploads/283d1dc769e096a464f7e2d1adcfbe9c.png'" :visible="previewVisible" @close="closePreview" />
+        </Teleport>
     </div>
 </template>
 
 <script setup>
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import { parseTime } from '@/utils/index.js';
 import Icon from '@/components/icon/index.vue';
 import Empty from '@/components/empty/index.vue';
+import ImagePreview from './ImagePreview.vue';
 const props = defineProps({
     demo: {
         type: Object,
@@ -43,6 +51,16 @@ const github = computed(() => {
 const description = computed(() => {
     return props.demo?.description ?? '暂无描述';
 });
+
+// 预览相关
+const previewVisible = ref(false);
+const previewImg = computed(() => props.demo?.thumb || '');
+const openPreview = () => {
+    if (previewImg.value) previewVisible.value = true;
+};
+const closePreview = () => {
+    previewVisible.value = false;
+};
 </script>
 
 <style lang="scss" scoped>

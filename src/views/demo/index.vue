@@ -2,7 +2,7 @@
     <div class="demo_list_wrap" v-loading="loading">
         <div class="demo_list">
             <h2 class="animate-in">一些小Demo，产自闲暇空余...</h2>
-            <p class="tips animate-in" style="animation-delay: 0.1s">Tips: demo暂无预览页面，点击源码地址跳转至github直接看代码吧～</p>
+            <p class="tips animate-in" style="animation-delay: 0.1s">Tips: demo暂无预览页面，点击源码地址跳转至github查看代码，点击图片可放大查看</p>
             <div style="height: 100%">
                 <Empty v-if="demoList.length === 0" />
                 <div v-else class="animate-in-container">
