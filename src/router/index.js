@@ -44,6 +44,18 @@ const router = createRouter({
                     name: 'about',
                     component: () => import('../views/about/index.vue'),
                 },
+                //游戏列表
+                {
+                    path: '/games',
+                    name: 'games',
+                    component: () => import('../views/games/index.vue'),
+                },
+                //井字棋游戏
+                {
+                    path: '/tictactoe',
+                    name: 'tictactoe',
+                    component: () => import('../views/tictactoe/index.vue'),
+                },
             ],
         },
     ],
