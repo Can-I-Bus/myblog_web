@@ -9,6 +9,7 @@
                 <router-link :class="['nav_item', { active: route.fullPath === '/about' }]" to="/about">关于我</router-link>
                 <router-link :class="['nav_item', { active: route.fullPath === '/blog' }]" to="/blog">博客</router-link>
                 <router-link :class="['nav_item', { active: route.fullPath === '/demo' }]" to="/demo">一些demo</router-link>
+                <router-link :class="['nav_item', { active: route.fullPath === '/games' }]" to="/games">一些游戏</router-link>
                 <router-link :class="['nav_item', { active: route.fullPath === '/message' }]" to="/message">留言墙</router-link>
             </div>
             <div class="header_actions">

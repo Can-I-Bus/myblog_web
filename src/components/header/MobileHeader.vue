@@ -33,6 +33,9 @@
                             >博客</router-link
                         >
                         <router-link class="menu-item" to="/demo" @click="closeMenu" :class="{ active: route.path === '/demo' }" active-class="" exact-active-class="">一些demo</router-link>
+                        <router-link class="menu-item" to="/games" @click="closeMenu" :class="{ active: route.path === '/games' || route.path === '/tictactoe' }" active-class="" exact-active-class=""
+                            >一些游戏</router-link
+                        >
                         <router-link class="menu-item" to="/message" @click="closeMenu" :class="{ active: route.path === '/message' }" active-class="" exact-active-class="">留言墙</router-link>
                     </div>
                     <div class="menu-footer">

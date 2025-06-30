@@ -4,6 +4,7 @@
             <router-link class="nav_item" to="/about">关于我</router-link>
             <router-link class="nav_item" to="/blog">博客</router-link>
             <router-link class="nav_item" to="/demo"> 一些demo </router-link>
+            <router-link class="nav_item" to="/games"> 一些游戏 </router-link>
             <router-link class="nav_item" to="/message"> 留言墙 </router-link>
         </div>
 
