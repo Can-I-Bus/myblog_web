@@ -34,6 +34,13 @@ const games = ref([
         link: '/tictactoe',
         tag: '简单',
     },
+    {
+        title: '俄罗斯方块',
+        description: '经典的俄罗斯方块游戏，通过移动和旋转方块，避免方块堆积到顶部',
+        image: '/games/tetris.png',
+        link: '/tetris',
+        tag: '中等',
+    },
     // {
     //     title: '2048',
     //     description: '合并相同数字的方块，努力达到2048或更高的数值',

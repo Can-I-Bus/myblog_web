@@ -56,6 +56,12 @@ const router = createRouter({
                     name: 'tictactoe',
                     component: () => import('../views/tictactoe/index.vue'),
                 },
+                //俄罗斯方块游戏
+                {
+                    path: '/tetris',
+                    name: 'tetris',
+                    component: () => import('../views/tetris/index.vue'),
+                },
             ],
         },
     ],
