@@ -13,7 +13,7 @@
                     <h4>{{ item.title }}</h4>
                     <div class="article-meta">
                         <span class="date">{{ formatDate(item.created_at) }}</span>
-                        <span class="views">{{ item.scan_number }} 次阅读</span>
+                        <!-- <span class="views">{{ item.scan_number }} 次阅读</span> -->
                     </div>
                 </div>
                 <div class="article-item-indicator"></div>

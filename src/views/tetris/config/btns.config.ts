@@ -16,7 +16,7 @@ export default [
     // 降落按钮
     {
         name: ButtonPosType.drop,
-        imageBaseSrc: 'public/games/drop.png',
+        imageBaseSrc: '/games/drop.png',
         // 左边离canvas最左侧的距离
         left: dropButtonX,
         // 顶部离canvas最顶部的距离
@@ -34,7 +34,7 @@ export default [
     // 暂停/开始按钮 - 位于得分区域下方
     {
         name: ButtonPosType.pause,
-        imageBaseSrc: 'public/games/Pause.png', // 默认显示暂停图标
+        imageBaseSrc: '/games/Pause.png', // 默认显示暂停图标
         // 计算位置：主棋盘右侧居中
         left: offset + squareSize * gameColumnNum + 30,
         // 位于得分区域下方
@@ -50,7 +50,7 @@ export default [
     // 上按钮
     {
         name: ButtonPosType.up,
-        imageBaseSrc: 'public/games/up.png',
+        imageBaseSrc: '/games/up.png',
         // 左边离canvas最左侧的距离
         left: baseX,
         // 顶部离canvas最顶部的距离
@@ -68,7 +68,7 @@ export default [
     // 左按钮
     {
         name: ButtonPosType.left,
-        imageBaseSrc: 'public/games/left.png',
+        imageBaseSrc: '/games/left.png',
         // 左边离canvas最左侧的距离
         left: baseX - 70,
         // 顶部离canvas最顶部的距离
@@ -86,7 +86,7 @@ export default [
     // 右按钮
     {
         name: ButtonPosType.right,
-        imageBaseSrc: 'public/games/right.png',
+        imageBaseSrc: '/games/right.png',
         // 左边离canvas最左侧的距离
         left: baseX + 70,
         // 顶部离canvas最顶部的距离
@@ -104,7 +104,7 @@ export default [
     // 下按钮
     {
         name: ButtonPosType.down,
-        imageBaseSrc: 'public/games/down.png',
+        imageBaseSrc: '/games/down.png',
         // 左边离canvas最左侧的距离
         left: baseX,
         // 顶部离canvas最顶部的距离

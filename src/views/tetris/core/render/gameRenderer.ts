@@ -255,12 +255,12 @@ export class GameRenderer implements IGameRenderer {
                     // 根据游戏状态显示不同图标
                     imageSrc =
                         this._gameStatus === GameStatus.pause
-                            ? 'public/games/start.png' // 暂停时显示开始图标
-                            : 'public/games/Pause.png'; // 游戏中显示暂停图标
+                            ? '/games/start.png' // 暂停时显示开始图标
+                            : '/games/Pause.png'; // 游戏中显示暂停图标
                 }
 
                 // 创建并加载图片
-                const img = await this.loadImage('../../../../../' + imageSrc);
+                const img = await this.loadImage(imageSrc);
 
                 // 计算图片在按钮中的居中位置
                 const imgX = button.left + button.imageOffsetX;
