@@ -146,7 +146,7 @@ export class GameRenderer implements IGameRenderer {
      */
     private drawNextShareSection(): void {
         if (!this._ctx) return;
-        const fillColor = '#f1f3f5'; // 使用固定颜色
+        const fillColor = '#fff'; // 使用固定颜色
         this._renderUtils?.drawRadiusRect({
             x: offset + squareSize * gameColumnNum + offset,
             y: offset,
