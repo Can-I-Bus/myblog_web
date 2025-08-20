@@ -29,10 +29,10 @@
                 </div>
                 <h1 class="article-title">{{ currArticle?.title ?? '暂无' }}</h1>
                 <div class="article-stats">
-                    <span class="stat-item">
+                    <!-- <span class="stat-item">
                         <Icon type="eye" fontSize="16px" />
                         {{ currArticle?.scan_number ?? 0 }} 次阅读
-                    </span>
+                    </span> -->
                     <span class="stat-item">
                         <Icon type="comment" fontSize="16px" />
                         {{ currArticle?.comment_number ?? 0 }} 条评论
@@ -232,7 +232,7 @@ const setupArticleObserver = () => {
         (entries) => {
             entries.forEach((entry) => {
                 if (entry.isIntersecting) {
-                    addScanNumber();
+                    // addScanNumber();
                     observer.disconnect();
                 }
             });
