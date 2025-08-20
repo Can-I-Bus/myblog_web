@@ -32,16 +32,13 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue';
 import { Game } from './core/game';
-// DOM引用
+
 const gameCanvas = ref<HTMLCanvasElement | null>(null);
 
-// 游戏状态
 const isGameOver = ref(false);
 
-// 游戏实例
 let gameInstance: Game | null = null;
 
-// 游戏方法
 const startNewGame = () => {
     if (gameCanvas.value) {
         isGameOver.value = false;
@@ -63,7 +60,6 @@ const startNewGame = () => {
             canvasEl: gameCanvas.value,
             onGameOver: () => {
                 isGameOver.value = true;
-                console.log('game over');
             },
         });
     }
@@ -75,19 +71,12 @@ const restartGame = () => {
 
 // 生命周期
 onMounted(() => {
-    // 禁止页面滚动，防止键盘事件引起页面滚动
-    // document.body.style.overflow = 'hidden';
-
-    // 延迟启动游戏，确保canvas已准备好
     setTimeout(() => {
         startNewGame();
-    }, 100);
+    }, 300);
 });
 
 onUnmounted(() => {
-    // 恢复页面滚动
-    // document.body.style.overflow = '';
-
     if (gameInstance) {
         gameInstance = null;
     }
@@ -154,7 +143,7 @@ onUnmounted(() => {
 
     &.game-over-animation {
         animation: gameOverPulse 1.5s infinite alternate;
-        box-shadow: 0 8px 32px rgba(220, 53, 69, 0.3), 0 2px 6px rgba(220, 53, 69, 0.2);
+        box-shadow: 0 8px 24px rgba(var(--textHoverColorRGB), 0.4);
     }
 }
 
@@ -303,10 +292,10 @@ onUnmounted(() => {
 // 动画效果
 @keyframes gameOverPulse {
     0% {
-        box-shadow: 0 8px 32px rgba(220, 53, 69, 0.3), 0 2px 6px rgba(220, 53, 69, 0.2);
+        box-shadow: 0 8px 24px rgba(var(--textHoverColorRGB), 0.4);
     }
     100% {
-        box-shadow: 0 12px 40px rgba(220, 53, 69, 0.5), 0 4px 10px rgba(220, 53, 69, 0.3);
+        box-shadow: 0 8px 24px rgba(var(--textHoverColorRGB), 0.8);
     }
 }
 
@@ -347,7 +336,7 @@ onUnmounted(() => {
     }
 
     .board_wrap {
-        box-shadow: 0 6px 24px rgba(0, 0, 0, 0.1), 0 1px 4px rgba(0, 0, 0, 0.06);
+        box-shadow: 0 8px 24px rgba(var(--textHoverColorRGB), 0.4);
 
         &:hover {
             transform: none;

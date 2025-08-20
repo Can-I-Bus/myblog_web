@@ -1,6 +1,5 @@
 import { ISquare } from './interfaces/ISquare';
 import { Point } from './types';
-import { getThemeColor } from '../utils';
 import { RenderUtils } from '../utils/renderUtils';
 import { ShapeUtils } from '../utils/shapeUtils';
 import GAME_CONFIG from '../config/game.config';
@@ -38,11 +37,11 @@ export class Square implements ISquare {
             let stokeColor;
             let fillColor;
             if (ShapeUtils.isInMainBoard(this._point)) {
-                stokeColor = getThemeColor('drawLineColor');
-                fillColor = getThemeColor('mainSectionBgc');
+                stokeColor = '#E3E5EC';
+                fillColor = '#fff';
             } else {
-                stokeColor = getThemeColor('nextShapeSectionBgc');
-                fillColor = getThemeColor('nextShapeSectionBgc');
+                stokeColor = '#fff';
+                fillColor = '#fff';
             }
             this._ctx.clearRect(this._point.x, this._point.y, squareSize, squareSize);
             this._renderUtils?.drawRect({
@@ -63,7 +62,7 @@ export class Square implements ISquare {
             y: this._point.y,
             w: squareSize,
             h: squareSize,
-            stokeColor: getThemeColor('drawLineColor'),
+            stokeColor: '#E3E5EC',
             fillColor: this._color,
         });
     }

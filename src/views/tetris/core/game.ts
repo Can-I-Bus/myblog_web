@@ -44,7 +44,14 @@ export class Game {
             this._onGamePause = onGamePause;
         }
         this._gameStatus = GameStatus.initial;
-        this.start();
+        this.init();
+    }
+
+    /**
+     * 初始化游戏
+     */
+    private async init() {
+        await this.start();
     }
 
     /**
@@ -78,12 +85,12 @@ export class Game {
     /**
      * 游戏开始
      */
-    private start() {
+    private async start() {
         if (!this._gameRenderer) return;
         this._gameStatus = GameStatus.playing;
         this._gameRenderer.setGameStatus(GameStatus.playing);
 
-        this._gameRenderer.render();
+        await this._gameRenderer.render();
         this._gameRenderer.resetGame(); // 初始化游戏数据
         this.setShape();
         this.gameLoop();

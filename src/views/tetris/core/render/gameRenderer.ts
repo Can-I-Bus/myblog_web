@@ -2,7 +2,6 @@ import GAME_CONFIG from '../../config/game.config';
 import BTNS_CONFIG from '../../config/btns.config';
 import { RenderUtils } from '../../utils/renderUtils';
 import { IGameRenderer } from '../interfaces/IGameRenderer';
-import { getThemeColor } from '../../utils';
 import { GameStatus } from '../enums/gameStatus.enum';
 import { ButtonPosType } from '../enums/btn.enum';
 const { squareSize, gameColumnNum, gameRowNum, dpr, offset, boardBorderWidth, interval, nextShapeSectionRowNum, nextShapeSectionColumnNum, gameWidth } = GAME_CONFIG;
@@ -105,9 +104,9 @@ export class GameRenderer implements IGameRenderer {
      */
     private drawMainSection(): void {
         if (!this._renderUtils) return;
-        const lineColor = getThemeColor('drawLineColor');
-        const boardBorderColor = getThemeColor('boardBorderColor');
-        const mainSectionBgc = getThemeColor('mainSectionBgc');
+        const lineColor = '#e0e0e0'; // 使用固定颜色
+        const boardBorderColor = '#cccccc'; // 使用固定颜色
+        const mainSectionBgc = '#f8f9fa'; // 使用固定颜色
         this._renderUtils.drawRect({
             x: offset - boardBorderWidth / 2,
             y: offset - boardBorderWidth / 2,
@@ -147,7 +146,7 @@ export class GameRenderer implements IGameRenderer {
      */
     private drawNextShareSection(): void {
         if (!this._ctx) return;
-        const fillColor = getThemeColor('nextShapeSectionBgc');
+        const fillColor = '#f1f3f5'; // 使用固定颜色
         this._renderUtils?.drawRadiusRect({
             x: offset + squareSize * gameColumnNum + offset,
             y: offset,
@@ -166,8 +165,8 @@ export class GameRenderer implements IGameRenderer {
     private drawScoreboardSection(): void {
         if (!this._renderUtils || !this._ctx) return;
 
-        const color = getThemeColor('labelColor');
-        const backgroundColor = getThemeColor('mainSectionBgc') || '#f8f8f8';
+        const color = '#495057'; // 使用固定颜色
+        const backgroundColor = '#f8f9fa'; // 使用固定颜色
 
         // 计算右侧空间的居中位置
         const mainBoardRightX = offset + squareSize * gameColumnNum;
@@ -187,7 +186,7 @@ export class GameRenderer implements IGameRenderer {
             y: scoreStartY - 15,
             w: rightSectionWidth - 20,
             h: sectionHeight - 10,
-            lineColor: getThemeColor('boardBorderColor') || '#ddd',
+            lineColor: '#dddddd', // 使用固定颜色
             lineWidth: 1,
             radius: 8,
             fillColor: backgroundColor,
@@ -215,7 +214,7 @@ export class GameRenderer implements IGameRenderer {
             this._renderUtils?.drawText({
                 x: centerX,
                 y: item.y + 25,
-                color: getThemeColor('scoreValueColor') || color,
+                color: '#212529', // 使用固定颜色
                 content: item.value,
                 fz: '18px',
                 textAlign: 'center',
@@ -227,31 +226,42 @@ export class GameRenderer implements IGameRenderer {
     /**
      * 绘制操作区域
      */
-    private drawActionSection(): void {
+    private async drawActionSection(): Promise<void> {
         if (!this._renderUtils) return;
 
         // 按钮背景和边框颜色
-        const buttonBgColor = getThemeColor('buttonBgColor') || '#f0f0f0';
-        const buttonBorderColor = getThemeColor('buttonBorderColor') || '#ccc';
+        const buttonBgColor = '#f0f0f0'; // 使用固定颜色
+        const buttonBorderColor = '#cccccc'; // 使用固定颜色
         const buttonRadius = 12; // 圆角半径
 
-        // 绘制每个按钮
-        BTNS_CONFIG.forEach((button) => {
-            // 先绘制按钮背景（圆角矩形）
-            this._renderUtils?.drawRadiusRect({
-                x: button.left,
-                y: button.top,
-                w: button.width,
-                h: button.height,
-                radius: buttonRadius,
-                fillColor: buttonBgColor,
-                lineColor: buttonBorderColor,
-                lineWidth: 1,
-            });
+        // 使用Promise.all等待所有图片加载完成
+        await Promise.all(
+            BTNS_CONFIG.map(async (button) => {
+                // 先绘制按钮背景（圆角矩形）
+                this._renderUtils?.drawRadiusRect({
+                    x: button.left,
+                    y: button.top,
+                    w: button.width,
+                    h: button.height,
+                    radius: buttonRadius,
+                    fillColor: buttonBgColor,
+                    lineColor: buttonBorderColor,
+                    lineWidth: 1,
+                });
 
-            // 创建并加载图片
-            const img = new Image();
-            img.onload = () => {
+                // 根据按钮类型和游戏状态设置不同的图片
+                let imageSrc = button.imageBaseSrc;
+                if (button.name === ButtonPosType.pause) {
+                    // 根据游戏状态显示不同图标
+                    imageSrc =
+                        this._gameStatus === GameStatus.pause
+                            ? 'public/games/start.png' // 暂停时显示开始图标
+                            : 'public/games/Pause.png'; // 游戏中显示暂停图标
+                }
+
+                // 创建并加载图片
+                const img = await this.loadImage('../../../../../' + imageSrc);
+
                 // 计算图片在按钮中的居中位置
                 const imgX = button.left + button.imageOffsetX;
                 const imgY = button.top + button.imageOffsetY;
@@ -264,28 +274,28 @@ export class GameRenderer implements IGameRenderer {
                     dWidth: button.imageSize,
                     dHeight: button.imageSize,
                 });
-            };
+            })
+        );
+    }
 
-            // 根据按钮类型和游戏状态设置不同的图片
-            let imageSrc = button.imageBaseSrc;
-            if (button.name === ButtonPosType.pause) {
-                // 根据游戏状态显示不同图标
-                imageSrc =
-                    this._gameStatus === GameStatus.pause
-                        ? 'public/games/start.png' // 暂停时显示开始图标
-                        : 'public/games/Pause.png'; // 游戏中显示暂停图标
-            }
-
-            // 设置图片源开始加载
-            img.src = '../../../../../' + imageSrc;
+    /**
+     * 加载图片并返回一个Promise
+     * @param src 图片路径
+     */
+    private loadImage(src: string): Promise<HTMLImageElement> {
+        return new Promise((resolve, reject) => {
+            const img = new Image();
+            img.onload = () => resolve(img);
+            img.onerror = reject;
+            img.src = src;
         });
     }
 
-    render(): void {
+    async render(): Promise<void> {
         this.drawMainSection();
         this.drawNextShareSection();
         this.drawScoreboardSection();
-        this.drawActionSection();
+        await this.drawActionSection();
     }
 
     clear(): void {
