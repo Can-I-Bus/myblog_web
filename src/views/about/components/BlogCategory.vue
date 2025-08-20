@@ -16,7 +16,7 @@
                 </div>
             </div>
             <div v-if="item.children && item.children.length > 0" class="children_wrap">
-                <BlogCategory :categoryList="item.children" @handleClick="handleItemClick" />
+                <BlogCategory :categoryList="item.children" @handleClick="handleItemClick(item)" />
             </div>
         </div>
     </div>
